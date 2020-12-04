@@ -9,5 +9,7 @@ class Token
 public:
 	Token(string word, int type);
 	void get_info();
+    string get_word();
+    int get_type();
 };
 

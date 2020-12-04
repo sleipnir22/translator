@@ -86,6 +86,8 @@ vector<Token> Lexer::get_tokens()
                 s = 0;
         }
     }
+
+    
     return tokens;
 }
 void Lexer::f1(char ch)
@@ -115,6 +117,9 @@ void Lexer::f5(char ch)
 {
     type = ch;
     cout << "Распознан символ языка '" << ch << "'" << endl;
+    st = ch;
+    make_token();
+    st = "";
     pos++;
     return;
 }
@@ -134,14 +139,16 @@ void Lexer::f7(char ch)
 void Lexer::f8(char ch)
 {
     type = 0;
-    cout << "Распознан концевой символ входной строки" << endl;
+    cout << "Распознан концевой символ входной строки\n";
+    st = ';';
+    make_token();
+    st = ' ';
     pos++;
     return;
 }
 void Lexer::f9(char ch)
 {
     int check = check_sw();
-    make_token();
     if (check < 0)
     {
         type = 1;
@@ -154,6 +161,7 @@ void Lexer::f9(char ch)
 
         cout << "Распознано служебное слово " << st << endl;
     }
+    make_token();
     st = "";
     return;
 }
@@ -166,13 +174,13 @@ void Lexer::f10(char ch)
 void Lexer::f11(char ch)
 {
     num = num * 10 + ch - '0';
-    st += to_string(num);
     pos++;
     return;
 }
 void Lexer::f12(char ch)
 {
     type = 2;
+    st = to_string(num);
     cout << "Распознано число " << num << endl;
     make_token();
     st = "";
@@ -189,10 +197,10 @@ void Lexer::f14(char ch)
 {
     type = 11;
     cout << "Распознан символ ':='" << endl;
+    st = ":=";
     make_token();
     st = "";
     pos++;
-    return;
 }
 void Lexer::f15(char ch)
 {
