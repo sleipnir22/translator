@@ -1,0 +1,8 @@
+﻿  Interpreter.cpp
+C:\Users\georg\source\repos\translator\translator\Parser.h(39,17): error C3646: make_ops: неизвестный спецификатор переопределения
+C:\Users\georg\source\repos\translator\translator\Parser.h(39,17): error C2059: синтаксическая ошибка: (
+C:\Users\georg\source\repos\translator\translator\Parser.h(39,19): error C2238: непредвиденные лексемы перед ";"
+C:\Users\georg\source\repos\translator\translator\Interpreter.cpp(6,44): warning C4838: Преобразование из "int" в "const char" требует сужающего преобразования.
+C:\Users\georg\source\repos\translator\translator\Interpreter.cpp(6,49): warning C4305: инициализация: усечение из "int" в "const char"
+C:\Users\georg\source\repos\translator\translator\Interpreter.cpp(6,44): warning C4309: инициализация: усечение константного значения
+C:\Users\georg\source\repos\translator\translator\Interpreter.cpp(55,9): warning C4244: =: преобразование "double" в "int", возможна потеря данных
