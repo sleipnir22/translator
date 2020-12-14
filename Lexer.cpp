@@ -63,7 +63,7 @@ Lexer::Lexer()
 Lexer::Lexer(string stext)
 {
     empty = false;
-    this->text = stext;
+    text = stext;
     j = 0;
     s = 0;
     k = 0;
@@ -75,34 +75,57 @@ void Lexer::make_token()
     Token temp_token(st, type);
     token = temp_token;
     token_ready = true;
+    cout << "lexema " << st << " type " << type << endl;
 }
 
 Token Lexer::get_token()
 {
+    j = 0;
+    s = 0;
+    k = 0;
     while (!token_ready && pos < text.size())
     {
         char ch = text[pos];
-        if (T[ch] && ch >= 0 && ch < 128)
-            j = T[ch];
-        else
-            j = 7;
+        if (ch >= 0)
+        {
+            switch (T[ch])
+            {
+            case 0:
+                    j = 7;
+                break;
+            default:
+                    j = T[ch];
+                break;
+            }
+        }
+
         if (s >= 0)
         {
-            j--;
+            j--; //!!!! 
             k = S[s][j];
             k--;
             s = M[s][j];
         }
-        if (s >= -1 && k >= 0)
+
+        switch (s)
         {
-            (this->*funcArr[k])(ch);
-            if (s == -1)
-                s = 0;
+        case -1:
+            if (k >= 0)
+                (this->*funcArr[k])(ch);
+            s = 0;
+            break;
+        default:
+            if (k >= 0)
+                (this->*funcArr[k])(ch);
+            break;
         }
     }
-    if (pos+10 == text.size()) empty = true;
+
+
+    if (pos > text.size()) empty = true;
 
     token_ready = false;
+
     return token;
 }
 void Lexer::f1(char ch)
@@ -131,7 +154,6 @@ void Lexer::f4(char ch)
 void Lexer::f5(char ch)
 {
     type = ch;
-    cout << "'" <<  ch << "'" << endl;
     st = ch;
     make_token();
     st = "";
@@ -147,14 +169,12 @@ void Lexer::f6(char ch)
 void Lexer::f7(char ch)
 {
     type = -1;
-    cout << "'" <<  ch << "'" << endl;
     pos++;
     return;
 }
 void Lexer::f8(char ch)
 {
     type = 0;
-    //cout << "Ðàñïîçíàí êîíöåâîé ñèìâîë âõîäíîé ñòðîêè\n";
     st = ';';
     make_token();
     st = ' ';
@@ -168,13 +188,10 @@ void Lexer::f9(char ch)
     {
         type = 1;
         varArr.push_back(st);
-        cout <<  st << endl;
     }
     else
     {
         type = check + 100;
-
-        cout <<  st << endl;
     }
     make_token();
     st = "";
@@ -183,7 +200,6 @@ void Lexer::f9(char ch)
 void Lexer::f10(char ch)
 {
     type = -1;
-    //cout << "Îøèáêà âî âõîäíîé ñòðîêå!" << endl;
     return;
 }
 void Lexer::f11(char ch)
@@ -196,7 +212,6 @@ void Lexer::f12(char ch)
 {
     type = 2;
     st = to_string(num);
-    cout <<  num << endl;
     make_token();
     st = "";
     num = 0;
@@ -205,13 +220,11 @@ void Lexer::f12(char ch)
 void Lexer::f13(char ch)
 {
     type = ch;
-    cout << "':'" << endl;
     return;
 }
 void Lexer::f14(char ch)
 {
     type = 11;
-    cout << "':='" << endl;
     st = ":=";
     make_token();
     st = "";
@@ -232,3 +245,25 @@ void Lexer::f16(char ch)
     st = "";
     return;
 }
+
+/*while (!token_ready && pos < text.size())
+    {
+        char ch = text[pos];
+        if (T[ch] && ch >= 0 && ch < 128)
+            j = T[ch];
+        else
+            j = 7;
+        if (s >= 0)
+        {
+            j--;
+            k = S[s][j];
+            k--;
+            s = M[s][j];
+        }
+        if (s >= -1 && k >= 0)
+        {
+            (this->*funcArr[k])(ch);
+            if (s == -1)
+                s = 0;
+        }
+    }*/

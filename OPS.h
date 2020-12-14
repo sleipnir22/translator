@@ -1,11 +1,11 @@
 #pragma once
-#include "Parser.h"
-#include "Lexer.h"
+#include "Token.h"
+#include <vector>
 
 
 struct OPS
 {
-	vector<Token> ops_tokens;
-	vector<string> ops_varArr;
+	vector<Token> tokens;
+	vector<string> varArr;
 };
 

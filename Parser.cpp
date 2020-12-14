@@ -1,16 +1,17 @@
 #include "Parser.h"
 #include "Lexer.h"
 
-const char Parser::nterm[] = { 'S','U','T','V','F' };
-const int Parser::term[] = { '+','-', '*','/','(', ')', 2, 1, 0 };
-const Parser::functionalArray Parser::funcArr[11] = { &Parser::f1, &Parser::f2, &Parser::f3, &Parser::f4,
-                                                    &Parser::f5, &Parser::f6, &Parser::f7, &Parser::f8, &Parser::f9, &Parser::f10,& Parser::f11 };
-const int Parser::M[5][9] =                 //Mатрица функций
-{   {0,0,0,0,2,0,3,3,0},         //
-    {4,5,1,1,1,1,1,1,1},
-    {0,0,0,0,6,0,7,7,0},
-    {1,1,8,9,1,1,1,1,1},
-    {0,0,0,0,10,0,11,11,0},
+const char Parser::nterm[] = { 'A','S','U','T','V','F' };
+const int Parser::term[] = { '+','-', '*','/','(', ')', 1, 2,'=', 0 };
+const Parser::functionalArray Parser::funcArr[12] = { &Parser::f1, &Parser::f2, &Parser::f3, &Parser::f4,
+                                                    &Parser::f5, &Parser::f6, &Parser::f7, &Parser::f8, &Parser::f9, &Parser::f10,& Parser::f11,& Parser::f12 };
+const int Parser::M[6][10] =                 //Mатрица функций
+{   {0,0,0,0,0,0,2,0,0,0},
+    {0,0,0,0,3,0,4,4,0,0},         //
+    {5,6,1,1,1,1,1,1,1,1},
+    {0,0,0,0,7,0,8,8,0,0},
+    {1,1,9,10,1,1,1,1,1,1},
+    {0,0,0,0,11,0,12,12,0,0},
 };
 //43 - '+'
 //42 - '*'
@@ -31,14 +32,19 @@ template <class T> void Parser::clear_stack(stack<T> stack)
         stack.pop();
     }
 }
+template <class T> void show_stack(stack<T> stack)
+{
+    while (!stack.empty())
+    {
+        cout << stack.top();
+        stack.pop();
+    }
+    cout << endl;
+}
 
 void Parser::reset_parser()
 {
-    pos = 0;
-    i = 0;
-    sch = 'S';
-    cnt = 0;
-    x = 0;
+    sch = 'A';
     
     p_ops_tokens.clear();
     if (!stack1.empty()) clear_stack(stack1);
@@ -46,7 +52,7 @@ void Parser::reset_parser()
 
 
     stack1.push(';');
-    stack1.push('S');
+    stack1.push('A');
 
     stack2.push(' ');
     stack2.push(' ');
@@ -54,22 +60,20 @@ void Parser::reset_parser()
 
 bool Parser::push_ops()
 {
+    int top1_ind = get_t_index(stack1.top());
 
-    token_word = token.get_word();
-    token_type = token.get_type();
-
-    if (get_nt_index(stack1.top()) == -1 && sch == ';')
+    if (top1_ind >= 0 && term[top1_ind] != token_type) //stacks to string!!!
     {
-        return false;
+        return false;      
     }
     if (stack2.top() != ' ')
     {
-        if (stack2.top() == 'a' && token.get_type() <= 2)
+        if (stack2.top() == 'a' && token_type <= 2 && token_type > 0)
             p_ops_tokens.push_back(token);
         else
         {
             string* temp_string = new string(1, stack2.top());
-            auto temp_token = new Token(*temp_string, token_type);
+            auto temp_token = new Token(*temp_string, stack2.top());
             p_ops_tokens.push_back(*temp_token);
         }
     }
@@ -79,10 +83,15 @@ bool Parser::push_ops()
 
 bool Parser::compare_stacks()
 {
+    if (stack1.top() == ';')
+        return false;
+    if (lex.is_empty()) 
+       return false;
     if (get_nt_index(stack1.top()) == -1)
     {
-        pos++;
         token = lex.get_token();
+        token_type = token.get_type();
+        token_word = token.get_word();
         stack1.pop();
         sch = stack1.top();
     }
@@ -104,13 +113,13 @@ bool Parser::compare_stacks()
             }
             else
             {
-                show_error("!Bad1");
+                show_error("!Bad1 grammar");
                 return false;
             }
         }
         else
         {
-            show_error("!Bad2");
+            show_error("!Bad2 nterm term arr error");
             return false;
         }
     }
@@ -119,22 +128,32 @@ bool Parser::compare_stacks()
 }
 
 
-
 OPS Parser::make_ops()
 {
     reset_parser();
     token = lex.get_token();
-    while (!lex.is_empty())
-    {
-        if (!push_ops()) break;
+    token_word = token.get_word();
+    token_type = token.get_type();
 
-        if (!compare_stacks()) break;
+    while (!stack1.empty())
+    {
+        if (!push_ops()) 
+            break;
+
+        if (!compare_stacks()) 
+            break;
+        show_stack(stack1);
     }
+
     OPS cur_ops;
-    cur_ops.ops_tokens = p_ops_tokens;
-    cur_ops.ops_varArr = lex.get_varArr();
+    cur_ops.tokens = p_ops_tokens;
+    cur_ops.varArr = lex.get_varArr();
+
     return cur_ops;
 }
+
+
+
 
 void Parser::show_error(string error)
 {
@@ -144,9 +163,9 @@ void Parser::show_error(string error)
 int Parser::get_t_index(int num)
 {
     int i = 0;
-    while (i < sizeof(term))
+    while (i < sizeof(term))// '/sizeof(int)
     {
-        if (num == term[i])// '/sizeof(int)
+        if (num == term[i])
             return i;
         else
             i++;
@@ -171,7 +190,22 @@ void Parser::f1()
 {
     stack1.pop();
 }
+
 void Parser::f2()
+{
+    stack1.pop();
+    stack1.push(' ');
+    stack1.push('S');
+    stack1.push('=');
+    stack1.push('a');
+
+    stack2.push('=');
+    stack2.push(' ');
+    stack2.push(' ');
+    stack2.push('a');
+}
+
+void Parser::f3()
 {
     stack1.pop();
     stack1.push('U');
@@ -186,7 +220,7 @@ void Parser::f2()
     stack2.push(' ');
     stack2.push(' ');
 }
-void Parser::f3()
+void Parser::f4()
 {
     stack1.pop();
     stack1.push('U');
@@ -197,7 +231,7 @@ void Parser::f3()
     stack2.push(' ');
     stack2.push('a');
 }
-void Parser::f4()
+void Parser::f5()
 {
     stack1.pop();
     stack1.push('U');
@@ -208,18 +242,18 @@ void Parser::f4()
     stack2.push(' ');
     stack2.push(' ');
 }
-void Parser::f5()
+void Parser::f6()
 {
     stack1.pop();
     stack1.push('U');
     stack1.push('T');
-    stack1.push('+');
+    stack1.push('-');
 
     stack2.push('-');
     stack2.push(' ');
     stack2.push(' ');
 }
-void Parser::f6()
+void Parser::f7()
 {
     stack1.pop();
     stack1.push('V');
@@ -232,7 +266,7 @@ void Parser::f6()
     stack2.push(' ');
     stack2.push(' ');
 }
-void Parser::f7()
+void Parser::f8()
 {
     stack1.pop();
     stack1.push('V');
@@ -241,7 +275,7 @@ void Parser::f7()
     stack2.push(' ');
     stack2.push('a');
 }
-void Parser::f8()
+void Parser::f9()
 {
     stack1.pop();
     stack1.push('V');
@@ -252,7 +286,7 @@ void Parser::f8()
     stack2.push(' ');
     stack2.push(' ');
 }
-void Parser::f9()
+void Parser::f10()
 {
     stack1.pop();
     stack1.push('V');
@@ -263,7 +297,7 @@ void Parser::f9()
     stack2.push(' ');
     stack2.push(' ');
 }
-void Parser::f10()
+void Parser::f11()
 {
     stack1.pop();
     stack1.push(')');
@@ -275,7 +309,7 @@ void Parser::f10()
     stack2.push(' ');
     stack2.push(' ');
 }
-void Parser::f11()
+void Parser::f12()
 {
     stack1.pop();
     stack1.push('a');

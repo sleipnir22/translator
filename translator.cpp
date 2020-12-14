@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Lexer.h"
 #include "Parser.h"
+#include "Interpreter.h"
 
 int main()
 {
@@ -29,18 +30,22 @@ int main()
 	Lexer lexer(textToBeTranslated);
 	Parser* parser = new Parser(lexer);
 	auto ops = parser->make_ops();
+	Interpreter* ipt = new Interpreter();
 
 	cout << endl;
 
-	for (int i = 0; i < ops.ops_tokens.size(); i++)
+	for (int i = 0; i < ops.tokens.size(); i++)
 	{
-		ops.ops_tokens[i].get_info();;
+		ops.tokens[i].get_info();
 	}
 	cout << endl;
 
-	for (int i = 0; i < ops.ops_varArr.size(); i++)
+	for (int i = 0; i < ops.varArr.size(); i++)
 	{
-		cout << ops.ops_varArr[i] << " ";
+		cout << ops.varArr[i] << " ";
 	}
+	cout << endl;
+	ipt->get_commands(ops);
+
 	return 0;
 }

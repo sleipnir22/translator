@@ -5,8 +5,8 @@
 using namespace std;
 class Token
 {
-	int type = -1;
-	string word = "";
+	int type;
+	string word;
 public:
 	Token();
 	Token(string word, int type);

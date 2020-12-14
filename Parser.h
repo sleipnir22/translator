@@ -1,27 +1,24 @@
 #pragma once
 #include <stack>
-#include <iostream>
-#include "Token.h"
-#include <vector>
-#include <queue>
-#include "lexer.h"
+#include "Lexer.h"
 #include "OPS.h"
 using namespace std;
+
 class Parser
 {
 
     typedef void (Parser::* functionalArray)();
-    static const functionalArray funcArr[11];
-    static const int M[5][9];
-    static const char nterm[5];
-    static const int term[9];
+    static const functionalArray funcArr[12];
+    static const int M[6][10];
+    static const char nterm[6];
+    static const int term[10];
     Token token;
-    stack<char> stack1, stack2;
+    stack<char> stack1, stack2; // string!!!
     string token_word;
     int token_type;
     Lexer lex;
 
-    int pos, i, cnt , x;
+    int i;
     vector<Token> p_ops_tokens;
     char sch;
 
@@ -33,9 +30,9 @@ class Parser
     bool compare_stacks();
     template <class T> void clear_stack(stack<T>);
     void show_error(string error);
-    void f1(), f2(), f3(), f4(), f5(), f6(), f7(), f8(), f9(), f10(), f11();
+    void f1(), f2(), f3(), f4(), f5(), f6(), f7(), f8(), f9(), f10(), f11(), f12();
 public:
-    Parser(Lexer);
-    OPS make_ops();               //הוכאוע ־ֿׁ
+    Parser(Lexer l);
+    OPS make_ops();
 
 };
