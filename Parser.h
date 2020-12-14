@@ -1,13 +1,9 @@
 #pragma once
+#include <stack>
+#include <iostream>
 #include "Token.h"
-<<<<<<< Updated upstream
 #include <vector>
 #include <queue>
-=======
-#include "OPS.h"
-#include "Lexer.h"
-
->>>>>>> Stashed changes
 using namespace std;
 class Parser
 {
