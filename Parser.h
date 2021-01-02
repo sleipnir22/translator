@@ -1,31 +1,49 @@
 #pragma once
+
 #include <stack>
-#include <iostream>
+#include "Lexer.h"
+#include "OPS.h"
 #include "Token.h"
-#include <vector>
-#include <queue>
+
 using namespace std;
-class Parser
-{
 
-    typedef void (Parser::*functionalArray)();
-    static const functionalArray funcArr[9];
-    static const int M[5][6];
-    static const char nterm[5];
-    static const int term[6];
-    vector<Token> tokens;
-    stack<char> stack1,stack2;
-    //stack<Token> st1;
-    int pos = 0;
+class Parser {
+
+    typedef void (Parser::* functionalArray)();
+
+    static const functionalArray funcArr[12];
+    static const int M[6][10];
+    static const char nterm[6];
+    static const int term[10];
+    Token token;
+    stack<char> stack1, stack2; // string!!!
+    string token_word;
+    int token_type;
+    Lexer lex;
+
+    int i;
+    vector<Token> p_ops_tokens;
+    char sch;
 
 
-    int get_t_index(int);                   //С„СѓРЅРєС†РёСЏ, РєРѕС‚РѕСЂР°СЏ РЅР°С…РѕРґРёС‚ РЅРѕРјРµСЂ С‚РµСЂРјРёРЅР°Р»Р° РІ РјР°СЃСЃРёРІРµ С‚РµСЂРјРёРЅР°Р»РѕРІ
-    int get_nt_index(char);                 //С‚Р° Р¶Рµ С„СѓРЅРєС†РёСЏ, РЅРѕ РґР»СЏ РЅРµС‚РµСЂРјРёРЅР°Р»РѕРІ
+    int get_t_index(int);                   //функция, которая находит номер терминала в массиве терминалов
+    int get_nt_index(char);                 //та же функция, но для нетерминалов
+    void reset_parser();
+
+    bool push_ops();
+
+    bool compare_stacks();
+
+    template<class T>
+    void clear_stack(stack<T>);
+
+    void show_error(string error);
+
+    void f1(), f2(), f3(), f4(), f5(), f6(), f7(), f8(), f9(), f10(), f11(), f12();
+
+    vector<OPSItem> make_ops_items();
 public:
-    void f1(),f2(), f3(), f4(), f5(), f6(), f7(), f8(), f9();
-    Parser(const vector<Token>&);
-    vector<Token> make_ops();               //РґРµР»Р°РµС‚ РћРџРЎ
-    Token findFirstName();
+    Parser(Lexer l);
 
+    OPS make_ops();
 };
-

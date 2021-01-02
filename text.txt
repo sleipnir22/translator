@@ -1,1 +1,1 @@
-5 + 321  'dsadasdsadaasdsd' ; 
+a = 10;
