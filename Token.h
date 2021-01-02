@@ -16,9 +16,6 @@ public:
     void get_info() const;
     string get_word() const;
     int get_type() const;
-    bool is_op();
-    friend bool operator <(const Token& left, const Token& right);
-    Token& operator = (const Token& other);
 };
 
 //template <typename T>
