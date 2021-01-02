@@ -1,6 +1,7 @@
 #include "Parser.h"
 #include "Lexer.h"
 #include "Token.h"
+#include "ENUMS.h"
 
 const char Parser::nterm[] = {'A', 'S', 'U', 'T', 'V', 'F'};
 const int Parser::term[] = {'+', '-', '*', '/', '(', ')', 1, 2, '=', 0};
@@ -130,13 +131,39 @@ OPS Parser::make_ops() {
             break;
         show_stack(stack1);
     }
-
+    auto items = make_ops_items();
     OPS cur_ops;
-    cur_ops.ops_tokens = p_ops_tokens;
-    cur_ops.ops_varArr = lex.get_varArr();
+
+
+
 
     return cur_ops;
 }
+
+vector<OPSItem> Parser::make_ops_items() {
+    auto new_var_vector = new vector<OPSItem>();
+    for (size_t pos = 0; pos < p_ops_tokens.size(); ++pos)
+    {
+        int type = p_ops_tokens[pos].get_type();
+        auto temp_token = p_ops_tokens[pos];
+        auto word = p_ops_tokens[pos].get_word();
+        int value = std::stoi(word);
+        switch(type)
+        {
+            case INT_T:
+                new_var_vector->push_back(OPSItem(value, ITEM_TYPE::CONST));
+                continue;
+            case NAME_T:
+                new_var_vector->push_back(OPSItem(word, ITEM_TYPE::VARIABLE));
+                continue;
+            default:
+                new_var_vector->push_back(OPSItem(word, ITEM_TYPE::OPERATOR));
+                continue;
+        }
+    }
+
+}
+
 
 
 void Parser::show_error(string error) {
