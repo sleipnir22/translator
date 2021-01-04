@@ -1,153 +1,109 @@
 #include "Parser.h"
-#include "Lexer.h"
+#include "ENUMS.h"
 
-const char Parser::nterm[] = { 'A','S','U','T','V','F' };
-const int Parser::term[] = { '+','-', '*','/','(', ')', 1, 2,'=', 0 };
-const Parser::functionalArray Parser::funcArr[12] = { &Parser::f1, &Parser::f2, &Parser::f3, &Parser::f4,
-                                                    &Parser::f5, &Parser::f6, &Parser::f7, &Parser::f8, &Parser::f9, &Parser::f10,& Parser::f11,& Parser::f12 };
+const Parser::functionalArray Parser::funcArr[15] = { &Parser::f1, &Parser::f2, &Parser::f3, &Parser::f4,
+                                                     &Parser::f5, &Parser::f6, &Parser::f7, &Parser::f8, &Parser::f9,
+                                                     &Parser::f10, &Parser::f11, &Parser::f12,& Parser::f13,& Parser::f14,& Parser::f15 };
 const int Parser::M[6][10] =                 //Mатрица функций
-{   {0,0,0,0,0,0,2,0,0,0},
-    {0,0,0,0,3,0,4,4,0,0},         //
-    {5,6,1,1,1,1,1,1,1,1},
-    {0,0,0,0,7,0,8,8,0,0},
-    {1,1,9,10,1,1,1,1,1,1},
-    {0,0,0,0,11,0,12,12,0,0},
+{ {0, 0, 0, 0,  0,  0, 2,  0,  0, 0},
+ {0, 0, 0, 0,  3,  0, 4,  5,  0, 0},                   
+ {6, 7, 1, 1,  1,  1, 1,  1,  1, 1},
+ {0, 0, 0, 0,  8,  0, 9,  10,  0, 0},
+ {1, 1, 11, 12, 1,  1, 1,  1,  1, 1},
+ {0, 0, 0, 0,  13, 0, 14, 15, 0, 0},
 };
-//43 - '+'
-//42 - '*'
-//40 - '('
-//41 - ')'
-//0 - концевой символ ';'
-//1 - имя
-Parser::Parser(Lexer l)
-{
+
+
+Parser::Parser(Lexer l) {
     lex = l;
+    reset_parser();
+
+}
+void Parser::reset_parser() {
+    token = get_token();
+    st_item = new stack_item(A);
+
+    stack1.push(new stack_item(TOKEN_T::END_T, TOKEN_T_M::END_T));
+    stack1.push(new stack_item(A));
+
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
 }
 
 
-template <class T> void Parser::clear_stack(stack<T> stack)
-{
-    while (!stack.empty())
-    {
-        stack.pop();
-    }
-}
-template <class T> void show_stack(stack<T> stack)
-{
-    while (!stack.empty())
-    {
-        cout << stack.top();
-        stack.pop();
-    }
-    cout << endl;
+Token Parser::get_token(){
+    Token cur_token = lex.get_token();
+    token_word = cur_token.get_word();
+    token_type = cur_token.get_type();
+    return cur_token;
 }
 
-void Parser::reset_parser()
+
+
+void Parser::step(STACK_ITEM_T top1_type, TOKEN_T top2_type)
 {
-    sch = 'A';
-    
-    p_ops_tokens.clear();
-    if (!stack1.empty()) clear_stack(stack1);
-    if (!stack2.empty()) clear_stack(stack2);
 
-
-    stack1.push(';');
-    stack1.push('A');
-
-    stack2.push(' ');
-    stack2.push(' ');
-}
-
-bool Parser::push_ops()
-{
-    int top1_ind = get_t_index(stack1.top());
-
-    if (top1_ind >= 0 && term[top1_ind] != token_type) //stacks to string!!!
+    if (top2_type != TOKEN_T::EMPTY_T)
     {
-        return false;      
-    }
-    if (stack2.top() != ' ')
-    {
-        if (stack2.top() == 'a' && token_type <= 2 && token_type > 0)
-            p_ops_tokens.push_back(token);
-        else
+        switch (top2_type)
         {
-            string* temp_string = new string(1, stack2.top());
-            auto temp_token = new Token(*temp_string, stack2.top());
-            p_ops_tokens.push_back(*temp_token);
+        case TOKEN_T::INT_T:
+            if (token_type == TOKEN_T::INT_T)
+            {
+                cur_ops.items.push_back(*(new OPSItem(stoi(token_word), ITEM_TYPE::CONST, TOKEN_T::INT_T)));
+            }
+            else
+                show_error("Int matching error!");
+            break;
+        case TOKEN_T::NAME_T:
+            if (token_type == TOKEN_T::NAME_T)
+            {
+                cur_ops.items.push_back(*(new OPSItem(token_word, ITEM_TYPE::VARIABLE, TOKEN_T::NAME_T)));
+                cur_ops.variables.push_back(*(new OPSItem(token_word, ITEM_TYPE::VARIABLE, TOKEN_T::NAME_T)));
+            }
+            else
+                show_error("Name matching error!");
+            break;
+        default:
+            cur_ops.items.push_back(*(new OPSItem(ITEM_TYPE::OPERATOR, stack2.top()->get_type())));
         }
     }
     stack2.pop();
-    return true;
-}
-
-bool Parser::compare_stacks()
-{
-    if (stack1.top() == ';')
-        return false;
-    if (lex.is_empty()) 
-       return false;
-    if (get_nt_index(stack1.top()) == -1)
+    if (top1_type == STACK_ITEM_T::TERM_T)
     {
-        token = lex.get_token();
-        token_type = token.get_type();
-        token_word = token.get_word();
+        token = get_token();
         stack1.pop();
-        sch = stack1.top();
     }
     else
     {
-        int ns = get_nt_index(sch);
-        if (ns >= 0)
-            i = ns;
+        STATE cur_state = stack1.top()->get_state();
 
-        int j = get_t_index(token_type);
+        int cur_type = token.get_M_ind();
 
-        if (j >= 0 && i >= 0)
+        if (cur_type >= 0)
         {
-            int k = M[i][j];
-            k--;
-            if (k >= 0)
-            {
-                (this->*funcArr[k])();
-            }
-            else
-            {
-                show_error("!Bad1 grammar");
-                return false;
-            }
-        }
-        else
-        {
-            show_error("!Bad2 nterm term arr error");
-            return false;
+            int func_num = M[cur_state][cur_type];
+            (this->*funcArr[func_num-1])();
+            std::cout << "func[" << func_num << "]" << std::endl;
         }
     }
-    sch = stack1.top();
-    return true;
+}
+
+void Parser::show_error(std::string error) {
+    std::cout << error << std::endl;
 }
 
 
-OPS Parser::make_ops()
-{
-    reset_parser();
-    token = lex.get_token();
-    token_word = token.get_word();
-    token_type = token.get_type();
-
-    while (!stack1.empty())
+OPS Parser::make_ops() {
+    while (!stack2.empty()) // lex is empty error!?
     {
-        if (!push_ops()) 
-            break;
+        STACK_ITEM_T top1_type = stack1.top()->get_stack_item_type();
+        TOKEN_T top2_type = stack2.top()->get_type();
+        step(top1_type, top2_type);
 
-        if (!compare_stacks()) 
-            break;
-        show_stack(stack1);
+        if (!lex.is_empty() && stack2.empty())
+            reset_parser();
     }
-
-    OPS cur_ops;
-    cur_ops.tokens = p_ops_tokens;
-    cur_ops.varArr = lex.get_varArr();
 
     return cur_ops;
 }
@@ -155,165 +111,156 @@ OPS Parser::make_ops()
 
 
 
-void Parser::show_error(string error)
-{
-    cout << error << endl;
-}
-
-int Parser::get_t_index(int num)
-{
-    int i = 0;
-    while (i < sizeof(term))// '/sizeof(int)
-    {
-        if (num == term[i])
-            return i;
-        else
-            i++;
-    }
-    return -1;
-}
-int Parser::get_nt_index(char ch)
-{
-    int i = 0;
-    while (i < sizeof(nterm))// '/sizeof(int)
-    {
-        if (ch == nterm[i])
-            return i;
-        else
-            ++i;
-    }
-    return -1;
-}
-
-
-void Parser::f1()
-{
+void Parser::f1() {
     stack1.pop();
 }
 
-void Parser::f2()
-{
+void Parser::f2() {
     stack1.pop();
-    stack1.push(' ');
-    stack1.push('S');
-    stack1.push('=');
-    stack1.push('a');
+    stack1.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack1.push(new stack_item(S));
+    stack1.push(new stack_item(TOKEN_T::EQUALS_T, TOKEN_T_M::EQUALS_T));
+    stack1.push(new stack_item(TOKEN_T::NAME_T, TOKEN_T_M::NAME_T));
 
-    stack2.push('=');
-    stack2.push(' ');
-    stack2.push(' ');
-    stack2.push('a');
+    stack2.push(new stack_item(TOKEN_T::EQUALS_T, TOKEN_T_M::EQUALS_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::NAME_T, TOKEN_T_M::NAME_T));
 }
 
-void Parser::f3()
-{
+void Parser::f3() {
     stack1.pop();
-    stack1.push('U');
-    stack1.push('V');
-    stack1.push(')');
-    stack1.push('S');
-    stack1.push('(');
+    stack1.push(new stack_item(U));
+    stack1.push(new stack_item(V));
+    stack1.push(new stack_item(TOKEN_T::R_PR_T, TOKEN_T_M::R_PR_T));
+    stack1.push(new stack_item(S));
+    stack1.push(new stack_item(TOKEN_T::L_PR_T, TOKEN_T_M::L_PR_T));
 
-    stack2.push(' ');
-    stack2.push(' ');
-    stack2.push(' ');
-    stack2.push(' ');
-    stack2.push(' ');
-}
-void Parser::f4()
-{
-    stack1.pop();
-    stack1.push('U');
-    stack1.push('V');
-    stack1.push('a');
-
-    stack2.push(' ');
-    stack2.push(' ');
-    stack2.push('a');
-}
-void Parser::f5()
-{
-    stack1.pop();
-    stack1.push('U');
-    stack1.push('T');
-    stack1.push('+');
-
-    stack2.push('+');
-    stack2.push(' ');
-    stack2.push(' ');
-}
-void Parser::f6()
-{
-    stack1.pop();
-    stack1.push('U');
-    stack1.push('T');
-    stack1.push('-');
-
-    stack2.push('-');
-    stack2.push(' ');
-    stack2.push(' ');
-}
-void Parser::f7()
-{
-    stack1.pop();
-    stack1.push('V');
-    stack1.push(')');
-    stack1.push('S');
-    stack1.push('(');
-
-    stack2.push(' ');
-    stack2.push(' ');
-    stack2.push(' ');
-    stack2.push(' ');
-}
-void Parser::f8()
-{
-    stack1.pop();
-    stack1.push('V');
-    stack1.push('a');
-
-    stack2.push(' ');
-    stack2.push('a');
-}
-void Parser::f9()
-{
-    stack1.pop();
-    stack1.push('V');
-    stack1.push('F');
-    stack1.push('*');
-
-    stack2.push('*');
-    stack2.push(' ');
-    stack2.push(' ');
-}
-void Parser::f10()
-{
-    stack1.pop();
-    stack1.push('V');
-    stack1.push('F');
-    stack1.push('/');
-
-    stack2.push('/');
-    stack2.push(' ');
-    stack2.push(' ');
-}
-void Parser::f11()
-{
-    stack1.pop();
-    stack1.push(')');
-    stack1.push('S');
-    stack1.push('(');
-
-
-    stack2.push(' ');
-    stack2.push(' ');
-    stack2.push(' ');
-}
-void Parser::f12()
-{
-    stack1.pop();
-    stack1.push('a');
-
-    stack2.push('a');
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T,TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T,TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T,TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T,TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T,TOKEN_T_M::EMPTY_T));
 }
 
+void Parser::f4() {
+    stack1.pop();
+    stack1.push(new stack_item(U));
+    stack1.push(new stack_item(V));
+    stack1.push(new stack_item(TOKEN_T::NAME_T, TOKEN_T_M::NAME_T));
+
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::NAME_T, TOKEN_T_M::NAME_T));
+}
+
+void Parser::f5() {
+    stack1.pop();
+    stack1.push(new stack_item(U));
+    stack1.push(new stack_item(V));
+    stack1.push(new stack_item(TOKEN_T::INT_T, TOKEN_T_M::INT_T));
+
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::INT_T, TOKEN_T_M::INT_T));
+}
+
+void Parser::f6() {
+    stack1.pop();
+    stack1.push(new stack_item(U));
+    stack1.push(new stack_item(T));
+    stack1.push(new stack_item(TOKEN_T::PLUS_T, TOKEN_T_M::PLUS_T));
+
+    stack2.push(new stack_item(TOKEN_T::PLUS_T, TOKEN_T_M::PLUS_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+}
+
+void Parser::f7() {
+    stack1.pop();
+    stack1.push(new stack_item(U));
+    stack1.push(new stack_item(T));
+    stack1.push(new stack_item(TOKEN_T::MINUS_T, TOKEN_T_M::MINUS_T));
+
+    stack2.push(new stack_item(TOKEN_T::MINUS_T, TOKEN_T_M::MINUS_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+}
+
+void Parser::f8() {
+    stack1.pop();
+    stack1.push(new stack_item(V));
+    stack1.push(new stack_item(TOKEN_T::R_PR_T, TOKEN_T_M::R_PR_T));
+    stack1.push(new stack_item(S));
+    stack1.push(new stack_item(TOKEN_T::L_PR_T, TOKEN_T_M::L_PR_T));
+
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+}
+
+void Parser::f9() {
+    stack1.pop();
+    stack1.push(new stack_item(V));
+    stack1.push(new stack_item(TOKEN_T::NAME_T, TOKEN_T_M::NAME_T));
+
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::NAME_T, TOKEN_T_M::NAME_T));
+}
+
+void Parser::f10() {
+    stack1.pop();
+    stack1.push(new stack_item(V));
+    stack1.push(new stack_item(TOKEN_T::INT_T, TOKEN_T_M::INT_T));
+
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::INT_T, TOKEN_T_M::INT_T));
+}
+
+void Parser::f11() {
+    stack1.pop();
+    stack1.push(new stack_item(V));
+    stack1.push(new stack_item(F));
+    stack1.push(new stack_item(TOKEN_T::MUL_T, TOKEN_T_M::MUL_T));
+
+    stack2.push(new stack_item(TOKEN_T::MUL_T, TOKEN_T_M::MUL_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+}
+
+void Parser::f12() {
+    stack1.pop();
+    stack1.push(new stack_item(V));
+    stack1.push(new stack_item(F));
+    stack1.push(new stack_item(TOKEN_T::DIV_T, TOKEN_T_M::DIV_T));
+
+    stack2.push(new stack_item(TOKEN_T::DIV_T, TOKEN_T_M::DIV_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+}
+
+void Parser::f13() {
+    stack1.pop();
+    stack1.push(new stack_item(TOKEN_T::R_PR_T, TOKEN_T_M::R_PR_T));
+    stack1.push(new stack_item(S));
+    stack1.push(new stack_item(TOKEN_T::L_PR_T, TOKEN_T_M::L_PR_T));
+
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+}
+
+void Parser::f14() {
+    stack1.pop();
+    stack1.push(new stack_item(TOKEN_T::NAME_T, TOKEN_T_M::NAME_T));
+
+    stack2.push(new stack_item(TOKEN_T::NAME_T, TOKEN_T_M::NAME_T));
+}
+
+void Parser::f15() {
+    stack1.pop();
+    stack1.push(new stack_item(TOKEN_T::INT_T, TOKEN_T_M::INT_T));
+
+    stack2.push(new stack_item(TOKEN_T::INT_T, TOKEN_T_M::INT_T));
+}

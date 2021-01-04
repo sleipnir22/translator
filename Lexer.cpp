@@ -1,4 +1,5 @@
 ﻿#include "Lexer.h"
+#include "ENUMS.h"
 #define  l Lexer
 
 const l::semf l::funcArr[16] = {
@@ -13,22 +14,23 @@ const int Lexer::M[6][9] =          //Màòðèöà ñîñòîÿíèé
     {5,5,-2,-2,-2,-2,-2,-2,-2}      //A -  3 , T - 4 , D - 5
 };
 
-const string Lexer::SW[]
+const std::string Lexer::SW[]
 {
-    "for","while","if","end","begin","then", "else"
+    "for","while","if", "{","}" ,"then", "else"
 };
 
-const char Lexer::T[] =                    //Ìàòðèöà ñèìâîëîâ
-{ 0,0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,  //1 - áóêâà 
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,    //2 - öèôðà
-6,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,    //3 - äâîåòî÷èå
-2,2,2,2,2,2,2,2,2,2,3,9,7,4,7,7,    //4 - ðàâíî
-7,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,    //5 - êàâû÷êà
-1,1,1,1,1,1,1,1,1,1,1,7,7,7,7,7,    //6 - ïðîáåë
-7,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,    //7 - ñ
-1,1,1,1,1,1,1,1,1,1,1,7,7,7,7,7 };
+const char Lexer::T[] =                    //Матрица символов
+{ 0,0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,  //1 - буква 
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,    //2 - цифра
+6,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,    //3 - двоеточие
+2,2,2,2,2,2,2,2,2,2,3,9,7,4,7,7,    //4 - равно
+7,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,    //5 - кавычка
+1,1,1,1,1,1,1,1,1,1,1,7,7,7,7,7,    //6 - пробел
+7,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,    //7 - с
+1,1,1,1,1,1,1,1,1,1,1,7,7,7,7,7 };   //8 - др
+                                    //9 - точка с запятой , 10 - перевод строки
 
-const int Lexer::S[6][9] =                 //Ìàòðèöà ôóíêöèé
+const int Lexer::S[6][9] =                 
 {
     {1,3,4,5,6,4,5,7,8},
     {2,2,9,9,9,9,9,9,9},
@@ -60,7 +62,7 @@ Lexer::Lexer()
     varArr.clear();
 }
 
-Lexer::Lexer(string stext)
+Lexer::Lexer(std::string stext)
 {
     empty = false;
     text = stext;
@@ -71,11 +73,11 @@ Lexer::Lexer(string stext)
 }
 
 void Lexer::make_token()
-{
-    Token temp_token(st, type);
+{   
+    Token temp_token(st, type, M_type, col,row);
     token = temp_token;
     token_ready = true;
-    cout << "lexema " << st << " type " << type << endl;
+    std::cout << "lexema " << st << " type " << type << std::endl;
 }
 
 Token Lexer::get_token()
@@ -83,9 +85,16 @@ Token Lexer::get_token()
     j = 0;
     s = 0;
     k = 0;
+
     while (!token_ready && pos < text.size())
     {
         char ch = text[pos];
+
+        if (ch == '\n')
+        {
+            row++;
+            start_row = pos;
+        }
         if (ch >= 0)
         {
             switch (T[ch])
@@ -119,10 +128,12 @@ Token Lexer::get_token()
                 (this->*funcArr[k])(ch);
             break;
         }
+        
+        
     }
-
-
-    if (pos > text.size()) empty = true;
+    col = pos - start_row;
+    if (pos >= text.size()) 
+        empty = true;
 
     token_ready = false;
 
@@ -153,7 +164,40 @@ void Lexer::f4(char ch)
 }
 void Lexer::f5(char ch)
 {
-    type = ch;
+    switch (ch)
+    {
+    case '=' :
+        type = TOKEN_T::EQUALS_T;
+        M_type = TOKEN_T_M::EQUALS_T;
+        break;
+    case '+':
+        type = TOKEN_T::PLUS_T;
+        M_type = TOKEN_T_M::PLUS_T;
+        break;
+    case '-':
+        type = TOKEN_T::MINUS_T;
+        M_type = TOKEN_T_M::MINUS_T;
+        break;
+    case '(':
+        type = TOKEN_T::L_PR_T;
+        M_type = TOKEN_T_M::L_PR_T;
+        break;
+    case ')':
+        type = TOKEN_T::R_PR_T;
+        M_type = TOKEN_T_M::R_PR_T;
+        break;
+    case '*':
+        type = TOKEN_T::MUL_T;
+        M_type = TOKEN_T_M::MUL_T;
+        break;
+    case '/':
+        type = TOKEN_T::DIV_T;
+        M_type = TOKEN_T_M::DIV_T;
+        break;
+    default:
+        type = TOKEN_T::ERROR_T;
+        M_type = TOKEN_T_M::ERROR_T;
+    }
     st = ch;
     make_token();
     st = "";
@@ -168,13 +212,15 @@ void Lexer::f6(char ch)
 }
 void Lexer::f7(char ch)
 {
-    type = -1;
+    type = TOKEN_T::ERROR_T;
+    M_type = TOKEN_T_M::ERROR_T;
     pos++;
     return;
 }
 void Lexer::f8(char ch)
 {
-    type = 0;
+    type = TOKEN_T::END_T;
+    M_type = TOKEN_T_M::END_T;
     st = ';';
     make_token();
     st = ' ';
@@ -186,12 +232,13 @@ void Lexer::f9(char ch)
     int check = check_sw();
     if (check < 0)
     {
-        type = 1;
+        type = NAME_T;
+        M_type = TOKEN_T_M::NAME_T;
         varArr.push_back(st);
     }
     else
     {
-        type = check + 100;
+        //type = check + 100; / switch!!!
     }
     make_token();
     st = "";
@@ -199,7 +246,8 @@ void Lexer::f9(char ch)
 }
 void Lexer::f10(char ch)
 {
-    type = -1;
+    type = TOKEN_T::ERROR_T;
+    M_type = TOKEN_T_M::ERROR_T;
     return;
 }
 void Lexer::f11(char ch)
@@ -210,8 +258,9 @@ void Lexer::f11(char ch)
 }
 void Lexer::f12(char ch)
 {
-    type = 2;
-    st = to_string(num);
+    type = TOKEN_T::INT_T;
+    M_type = TOKEN_T_M::INT_T;
+    st = std::to_string(num);
     make_token();
     st = "";
     num = 0;
@@ -219,12 +268,14 @@ void Lexer::f12(char ch)
 }
 void Lexer::f13(char ch)
 {
-    type = ch;
+    type = TOKEN_T::ERROR_T;    // ':' - двоеточие
+    M_type = TOKEN_T_M::ERROR_T;
     return;
 }
-void Lexer::f14(char ch)
+void Lexer::f14(char ch) 
 {
-    type = 11;
+    type = TOKEN_T::ERROR_T;    // ':=' 
+    M_type = TOKEN_T_M::ERROR_T;
     st = ":=";
     make_token();
     st = "";
@@ -238,32 +289,11 @@ void Lexer::f15(char ch)
 }
 void Lexer::f16(char ch)
 {
-    type = 3;
+    type = TOKEN_T::ERROR_T;    // ':=' 
+    M_type = TOKEN_T_M::ERROR_T;
     pos++;
-    cout << st << endl;
+    std::cout << st << std::endl;
     make_token();
     st = "";
     return;
 }
-
-/*while (!token_ready && pos < text.size())
-    {
-        char ch = text[pos];
-        if (T[ch] && ch >= 0 && ch < 128)
-            j = T[ch];
-        else
-            j = 7;
-        if (s >= 0)
-        {
-            j--;
-            k = S[s][j];
-            k--;
-            s = M[s][j];
-        }
-        if (s >= -1 && k >= 0)
-        {
-            (this->*funcArr[k])(ch);
-            if (s == -1)
-                s = 0;
-        }
-    }*/
