@@ -1,2 +1,1 @@
-x=f;x=f+a+b+c;
-x=f;x=f+a+b+c;
+int[];

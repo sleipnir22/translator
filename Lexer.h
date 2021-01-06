@@ -21,7 +21,6 @@ class Lexer
     int num = 0;						
     std::string st;						
     TOKEN_T type;
-    TOKEN_T_M M_type;
     std::string text;
     int check_sw();
     void make_token();					

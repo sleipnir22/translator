@@ -24,10 +24,16 @@ int main() {
     }
 
     Lexer lexer(text);
-    Parser* parser = new Parser(lexer);
+
+    while (!lexer.is_empty())
+    {
+        lexer.get_token();
+    }
+
+    /*Parser* parser = new Parser(lexer);
     auto ops = parser->make_ops();
 
-    cout << endl;
+    cout << endl;*/
 
     //Interpreter* interpreter = new Interpreter(ops);
     //interpreter->generate_commands();

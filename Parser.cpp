@@ -23,11 +23,11 @@ void Parser::reset_parser() {
     token = get_token();
     st_item = new stack_item(A);
 
-    stack1.push(new stack_item(TOKEN_T::END_T, TOKEN_T_M::END_T));
+    stack1.push(new stack_item(TOKEN_T::END_T));
     stack1.push(new stack_item(A));
 
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
 }
 
 
@@ -78,7 +78,7 @@ void Parser::step(STACK_ITEM_T top1_type, TOKEN_T top2_type)
     {
         STATE cur_state = stack1.top()->get_state();
 
-        int cur_type = token.get_M_ind();
+        int cur_type = (int) token.get_type();
 
         if (cur_type >= 0)
         {
@@ -117,150 +117,150 @@ void Parser::f1() {
 
 void Parser::f2() {
     stack1.pop();
-    stack1.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack1.push(new stack_item(TOKEN_T::EMPTY_T));
     stack1.push(new stack_item(S));
-    stack1.push(new stack_item(TOKEN_T::EQUALS_T, TOKEN_T_M::EQUALS_T));
-    stack1.push(new stack_item(TOKEN_T::NAME_T, TOKEN_T_M::NAME_T));
+    stack1.push(new stack_item(TOKEN_T::ASSIGN_T));
+    stack1.push(new stack_item(TOKEN_T::NAME_T));
 
-    stack2.push(new stack_item(TOKEN_T::EQUALS_T, TOKEN_T_M::EQUALS_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::NAME_T, TOKEN_T_M::NAME_T));
+    stack2.push(new stack_item(TOKEN_T::ASSIGN_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::NAME_T));
 }
 
 void Parser::f3() {
     stack1.pop();
     stack1.push(new stack_item(U));
     stack1.push(new stack_item(V));
-    stack1.push(new stack_item(TOKEN_T::R_PR_T, TOKEN_T_M::R_PR_T));
+    stack1.push(new stack_item(TOKEN_T::R_PR_T));
     stack1.push(new stack_item(S));
-    stack1.push(new stack_item(TOKEN_T::L_PR_T, TOKEN_T_M::L_PR_T));
+    stack1.push(new stack_item(TOKEN_T::L_PR_T));
 
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T,TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T,TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T,TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T,TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T,TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
 }
 
 void Parser::f4() {
     stack1.pop();
     stack1.push(new stack_item(U));
     stack1.push(new stack_item(V));
-    stack1.push(new stack_item(TOKEN_T::NAME_T, TOKEN_T_M::NAME_T));
+    stack1.push(new stack_item(TOKEN_T::NAME_T));
 
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::NAME_T, TOKEN_T_M::NAME_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::NAME_T));
 }
 
 void Parser::f5() {
     stack1.pop();
     stack1.push(new stack_item(U));
     stack1.push(new stack_item(V));
-    stack1.push(new stack_item(TOKEN_T::INT_T, TOKEN_T_M::INT_T));
+    stack1.push(new stack_item(TOKEN_T::INT_T));
 
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::INT_T, TOKEN_T_M::INT_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::INT_T));
 }
 
 void Parser::f6() {
     stack1.pop();
     stack1.push(new stack_item(U));
     stack1.push(new stack_item(T));
-    stack1.push(new stack_item(TOKEN_T::PLUS_T, TOKEN_T_M::PLUS_T));
+    stack1.push(new stack_item(TOKEN_T::PLUS_T));
 
-    stack2.push(new stack_item(TOKEN_T::PLUS_T, TOKEN_T_M::PLUS_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::PLUS_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
 }
 
 void Parser::f7() {
     stack1.pop();
     stack1.push(new stack_item(U));
     stack1.push(new stack_item(T));
-    stack1.push(new stack_item(TOKEN_T::MINUS_T, TOKEN_T_M::MINUS_T));
+    stack1.push(new stack_item(TOKEN_T::MINUS_T));
 
-    stack2.push(new stack_item(TOKEN_T::MINUS_T, TOKEN_T_M::MINUS_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::MINUS_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));;
 }
 
 void Parser::f8() {
     stack1.pop();
     stack1.push(new stack_item(V));
-    stack1.push(new stack_item(TOKEN_T::R_PR_T, TOKEN_T_M::R_PR_T));
+    stack1.push(new stack_item(TOKEN_T::R_PR_T));
     stack1.push(new stack_item(S));
-    stack1.push(new stack_item(TOKEN_T::L_PR_T, TOKEN_T_M::L_PR_T));
+    stack1.push(new stack_item(TOKEN_T::L_PR_T));
 
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
 }
 
 void Parser::f9() {
     stack1.pop();
     stack1.push(new stack_item(V));
-    stack1.push(new stack_item(TOKEN_T::NAME_T, TOKEN_T_M::NAME_T));
+    stack1.push(new stack_item(TOKEN_T::NAME_T));
 
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::NAME_T, TOKEN_T_M::NAME_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::NAME_T));
 }
 
 void Parser::f10() {
     stack1.pop();
     stack1.push(new stack_item(V));
-    stack1.push(new stack_item(TOKEN_T::INT_T, TOKEN_T_M::INT_T));
+    stack1.push(new stack_item(TOKEN_T::INT_T));
 
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::INT_T, TOKEN_T_M::INT_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::INT_T));
 }
 
 void Parser::f11() {
     stack1.pop();
     stack1.push(new stack_item(V));
     stack1.push(new stack_item(F));
-    stack1.push(new stack_item(TOKEN_T::MUL_T, TOKEN_T_M::MUL_T));
+    stack1.push(new stack_item(TOKEN_T::MUL_T));
 
-    stack2.push(new stack_item(TOKEN_T::MUL_T, TOKEN_T_M::MUL_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::MUL_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
 }
 
 void Parser::f12() {
     stack1.pop();
     stack1.push(new stack_item(V));
     stack1.push(new stack_item(F));
-    stack1.push(new stack_item(TOKEN_T::DIV_T, TOKEN_T_M::DIV_T));
+    stack1.push(new stack_item(TOKEN_T::DIV_T));
 
-    stack2.push(new stack_item(TOKEN_T::DIV_T, TOKEN_T_M::DIV_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::DIV_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
 }
 
 void Parser::f13() {
     stack1.pop();
-    stack1.push(new stack_item(TOKEN_T::R_PR_T, TOKEN_T_M::R_PR_T));
+    stack1.push(new stack_item(TOKEN_T::R_PR_T));
     stack1.push(new stack_item(S));
-    stack1.push(new stack_item(TOKEN_T::L_PR_T, TOKEN_T_M::L_PR_T));
+    stack1.push(new stack_item(TOKEN_T::L_PR_T));
 
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
-    stack2.push(new stack_item(TOKEN_T::EMPTY_T, TOKEN_T_M::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
+    stack2.push(new stack_item(TOKEN_T::EMPTY_T));
 }
 
 void Parser::f14() {
     stack1.pop();
-    stack1.push(new stack_item(TOKEN_T::NAME_T, TOKEN_T_M::NAME_T));
+    stack1.push(new stack_item(TOKEN_T::NAME_T));
 
-    stack2.push(new stack_item(TOKEN_T::NAME_T, TOKEN_T_M::NAME_T));
+    stack2.push(new stack_item(TOKEN_T::NAME_T));
 }
 
 void Parser::f15() {
     stack1.pop();
-    stack1.push(new stack_item(TOKEN_T::INT_T, TOKEN_T_M::INT_T));
+    stack1.push(new stack_item(TOKEN_T::INT_T));
 
-    stack2.push(new stack_item(TOKEN_T::INT_T, TOKEN_T_M::INT_T));
+    stack2.push(new stack_item(TOKEN_T::INT_T));
 }

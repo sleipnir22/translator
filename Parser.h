@@ -38,8 +38,8 @@ public:
     stack_item(std::string word, TOKEN_T token_type)
         : Token(word,token_type), stack_item_type(TERM_T) {}
 
-    stack_item(TOKEN_T token_type, TOKEN_T_M M_type)
-        : Token("\0", token_type,M_type), stack_item_type(STACK_ITEM_T::TERM_T) {}
+    stack_item(TOKEN_T token_type)
+        : Token("\0", token_type), stack_item_type(STACK_ITEM_T::TERM_T) {}
 
     stack_item(STATE state) 
         : state(state), stack_item_type(STACK_ITEM_T::STATE_T) {}
