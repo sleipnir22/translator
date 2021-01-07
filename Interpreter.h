@@ -8,7 +8,6 @@
 #include <map>
 #include <algorithm>
 
-using namespace std;
 
 class Interpreter {
     int sum;
@@ -16,8 +15,8 @@ class Interpreter {
     Token* k;
     size_t i;
     OPS ops;
-    stack<Token> st;
-    map<Token, int> variables;
+    std::stack<Token> st;
+    std::map<Token, int> variables;
 
     void SUB(Token), MUL(Token), DIV(Token), LOAD(Token), ST(Token&), ADD(Token);
     void OP(Token);

@@ -29,7 +29,7 @@ public:
 };
 
 struct OPS {
-    std::vector<std::vector<OPSItem>> array;
-    std::vector<OPSItem> variables;
     std::vector<OPSItem> items;
+    std::map<std::string,int> vars;
+    std::map<std::string, std::vector<int>> arr;
 };
