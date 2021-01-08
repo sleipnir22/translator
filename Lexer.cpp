@@ -108,11 +108,6 @@ Token Lexer::get_token()
                 break;
             }
         }
-        if (s == -3)
-        {
-            pos--;
-            break;
-        }
 
         if (s >= 0)
         {

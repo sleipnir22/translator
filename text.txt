@@ -1,2 +1,6 @@
-write(5);
-write(5);
+int a;
+while (a >=0)
+
+{
+	a = a +1;
+}

@@ -100,7 +100,10 @@ void Parser::step(STACK_ITEM_T top1_item_type, STACK_ITEM_T top2_item_type)
         break;
     case STACK_ITEM_T::TERM_T:
         if (stack1.top()->get_type() == token_type)
+        {
+            if (!lex.is_empty())
             token = get_token();
+        }
         else
             show_error("Token and stack1 doesn't match error!");
         stack1.pop();
@@ -134,10 +137,12 @@ void Parser::show_error(std::string error) {
 
 
 OPS Parser::make_ops() {
-    while (!lex.is_empty()) // lex is empty error!?
+    while (!lex.is_empty()|| (!stack2.empty() && !stack1.empty())) // lex is empty error!?
     {
-        STACK_ITEM_T top1_item_type = stack1.top()->get_stack_item_type();
-        STACK_ITEM_T top2_item_type = stack2.top()->get_stack_item_type();
+
+        STACK_ITEM_T top1_item_type = stack1.top()->get_stack_item_type(); // stack1 empty error!
+        STACK_ITEM_T top2_item_type = stack2.top()->get_stack_item_type(); // stack2 empty error!
+
         step(top1_item_type, top2_item_type);
     }
 
