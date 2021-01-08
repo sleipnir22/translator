@@ -8,7 +8,7 @@ const p::functionalArray p::funcArr[44] = { &p::f1, &p::f2, &p::f3, &p::f4, &p::
                                             & p::f32,& p::f33,& p::f34,& p::f35,& p::f36,& p::f37,& p::f38,& p::f39,&p::f40,& p::f41,& p::f42,& p::f43,& p::f44 };
 
 
-const int Parser::M[17][28] =                 //Mатрица функций
+const int Parser::M[17][28] =                 //MпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 {   //  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  AA AB AC
     /*2*/ { 2, 0, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 8, 0, 0, 0, 0, 0, 0, 0},
     /*3*/ {10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -256,6 +256,7 @@ void Parser::f7() {
     stack2.push(new stack_item("<1>"));
     stack2.push(new stack_item());
     stack2.push(new stack_item());
+    stack2.push(new stack_item());
 }
 
 void Parser::f8() {
@@ -352,8 +353,8 @@ void Parser::f14() {
 
 
     stack2.push(new stack_item());
-    stack2.push(new stack_item());
     stack2.push(new stack_item(TOKEN_T::ASSIGN_T));
+    stack2.push(new stack_item());
     stack2.push(new stack_item());
     stack2.push(new stack_item());
     stack2.push(new stack_item(TOKEN_T::NAME_T));
@@ -404,8 +405,9 @@ void Parser::f17()
     stack1.push(new stack_item(H));
     stack1.push(new stack_item(TOKEN_T::NAME_T));
 
-    stack2.push(new stack_item());
+
     stack2.push(new stack_item(TOKEN_T::ASSIGN_T));
+    stack2.push(new stack_item());
     stack2.push(new stack_item());
     stack2.push(new stack_item());
     stack2.push(new stack_item(TOKEN_T::NAME_T));
@@ -446,6 +448,7 @@ void Parser::f19()
     stack2.push(new stack_item(TOKEN_T::NAME_T));
     stack2.push(new stack_item());
     stack2.push(new stack_item());
+
 }
 
 void Parser::f20()
@@ -469,6 +472,7 @@ void Parser::f20()
     stack2.push(new stack_item());
     stack2.push(new stack_item("<b>"));
     stack2.push(new stack_item("<1>"));
+    stack2.push(new stack_item());
     stack2.push(new stack_item());
     stack2.push(new stack_item());
 }
@@ -496,7 +500,7 @@ void Parser::f21()
     stack2.push(new stack_item("<4>"));
 }
 
-void Parser::f22()
+void Parser::f22() //!!!
 {
     stack1.pop();
     stack1.push(new stack_item(D));
@@ -508,8 +512,8 @@ void Parser::f22()
     stack2.push(new stack_item());
     stack2.push(new stack_item());
     stack2.push(new stack_item());
-    stack2.push(new stack_item());    
     stack2.push(new stack_item());
+    stack2.push(new stack_item(TOKEN_T::NAME_T));
 }
 
 void Parser::f23()
@@ -651,10 +655,8 @@ void Parser::f33()
     stack1.pop();
     stack1.push(new stack_item(U));
     stack1.push(new stack_item(V));
-    stack1.push(new stack_item(H));
     stack1.push(new stack_item(TOKEN_T::INT_T));
 
-    stack2.push(new stack_item());
     stack2.push(new stack_item());
     stack2.push(new stack_item());
     stack2.push(new stack_item(TOKEN_T::INT_T));
