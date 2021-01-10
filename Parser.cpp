@@ -16,7 +16,7 @@ const p::functionalArray p::funcArr[47] = {&p::f1, &p::f2, &p::f3, &p::f4, &p::f
 
 const int Parser::M[17][28] =                 //M������ �������
         {   //  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  AA AB AC
-                /*2*/ {2,  0,  3,  4,  5,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  7,  0,  8,  0,  0,  0,  0,  0,  0,  46},
+                /*2*/ {2,  0,  3,  4,  5,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  7,  0,  8,  0,  0,  0,  0,  0,  0,  9},
                 /*3*/
                       {10, 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
                 /*4*/
@@ -90,22 +90,23 @@ void Parser::execute_semantic(std::vector<OPSItem>& ops_items, std::stack<stack_
         cur_ops.items.emplace_back(OPSItem("}",OPERATION_T::END_T));
     } else if (word == "<11>") {
         is_filling_vars = true;
-    } else if (word == "<12") {
-        is_filling_vars = true;
+    } else if (word == "<12>") {
+        is_filling_arr = true;
     } else if (word == "<16>") {
         if (is_filling_vars) {
             if (cur_ops.vars.find(token_word) == cur_ops.vars.end())
                 cur_ops.vars.insert(make_pair(token_word, 0));
             else
                 throw DeclarationError(token.col, token.row, token);
+            //return;
         }
         if (is_filling_arr){
             cur_ops.items.push_back(*(new OPSItem(token_word, ITEM_TYPE::VARIABLE, TOKEN_T::NAME_T)));
             if (cur_ops.arr.find(token_word) == cur_ops.arr.end()) {
                 cur_ops.arr.insert(make_pair(token_word, std::vector<int>()));
-            }
-            else
+            } else
                 throw DeclarationError(token.col, token.row, token);
+            //return;
         }
     } else if (word == "<m1>") {
         cur_ops.items.emplace_back(OPSItem("DECLARE_ARR",OPERATION_T::DECLARE_ARR));
@@ -121,7 +122,7 @@ void Parser::execute_semantic(std::vector<OPSItem>& ops_items, std::stack<stack_
     }
 }
 
-bool Parser::is_semantic(std::stack<stack_item *> &stack2) {
+bool Parser::is_semantic(std::stack<stack_item *>& stack2) {
     auto word = stack2.top()->get_word();
     if (word == "<1>" || word == "<2>" || word == "<3>" || word == "<4>"
         || word == "<5>" || word == "<m1>" || word == "<11>" ||word == "<e_declare>"
@@ -282,7 +283,7 @@ void Parser::f4() {
 
     stack2.push(new stack_item());
     stack2.push(new stack_item());
-    stack2.push(new stack_item("<12>"));
+    stack2.push(new stack_item("<12>",TOKEN_T::EMPTY_T));
 }
 
 void Parser::f5() {
