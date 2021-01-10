@@ -4,14 +4,14 @@
 
 #define  p Parser
 
-const p::functionalArray p::funcArr[46] = {&p::f1, &p::f2, &p::f3, &p::f4, &p::f5, &p::f6, &p::f7, &p::f8, &p::f9,
+const p::functionalArray p::funcArr[47] = {&p::f1, &p::f2, &p::f3, &p::f4, &p::f5, &p::f6, &p::f7, &p::f8, &p::f9,
                                            &p::f10, &p::f11,
                                            &p::f12, &p::f13, &p::f14, &p::f15, &p::f16, &p::f17, &p::f18, &p::f19,
                                            &p::f20, &p::f21,
                                            &p::f22, &p::f23, &p::f24, &p::f25, &p::f26, &p::f27, &p::f28, &p::f29,
                                            &p::f30, &p::f31,
                                            &p::f32, &p::f33, &p::f34, &p::f35, &p::f36, &p::f37, &p::f38, &p::f39,
-                                           &p::f40, &p::f41, &p::f42, &p::f43, &p::f44, &p::f45, &p::f46};
+                                           &p::f40, &p::f41, &p::f42, &p::f43, &p::f44, &p::f45, &p::f46, &p::f47};
 
 
 const int Parser::M[17][28] =                 //M������ �������
@@ -30,7 +30,7 @@ const int Parser::M[17][28] =                 //M������ ����
                 /*8*/
                       {17, 1,  1,  1,  18, 19, 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  20, 1,  21, 1,  1,  1,  1,  1,  1,  1},
                 /*9*/
-                      {1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1},
+                      {1,  1,  1,  1,  1,  1,  1,  1,  47,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1},
                 /*10*/
                       {22, 23, 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  24, 0,  0},
                 /*11*/
@@ -108,7 +108,7 @@ void Parser::execute_semantic(std::vector<OPSItem>& ops_items, std::stack<stack_
                 throw DeclarationError(token.col, token.row, token);
         }
     } else if (word == "<m1>") {
-        cur_ops.items.emplace_back(OPSItem("DECLARE ARR",OPERATION_T::DECLARE_ARR));
+        cur_ops.items.emplace_back(OPSItem("DECLARE_ARR",OPERATION_T::DECLARE_ARR));
     } else if (word == "<e_declare>") {
         is_filling_vars = false;
         is_filling_arr = false;
@@ -116,6 +116,8 @@ void Parser::execute_semantic(std::vector<OPSItem>& ops_items, std::stack<stack_
         cur_ops.items.emplace_back(OPSItem("READ",OPERATION_T::READ_T));
     } else if (word == "<w>"){
         cur_ops.items.emplace_back(OPSItem("WRITE",OPERATION_T::WRITE_T));
+    } else if (word == "<i>") {
+        cur_ops.items.emplace_back(OPSItem("INDEX",OPERATION_T::I_T));
     }
 }
 
@@ -124,7 +126,7 @@ bool Parser::is_semantic(std::stack<stack_item *> &stack2) {
     if (word == "<1>" || word == "<2>" || word == "<3>" || word == "<4>"
         || word == "<5>" || word == "<m1>" || word == "<11>" ||word == "<e_declare>"
         || word == "<12>" || word == "<16>" || word == "<b>" || word == "<e>" ||
-        word == "<w>" || word == "<r>"
+        word == "<w>" || word == "<r>" || word == "<i>"
             ) {
         return true;
     } else return false;
@@ -862,5 +864,17 @@ void Parser::f46()
     stack1.pop();
     stack1.push(new stack_item(TOKEN_T::END_T, STACK_ITEM_T::TERM_T));
 
+    stack2.push(new stack_item());
+}
+
+void Parser::f47()
+{
+    stack1.pop();
+    stack1.push(new stack_item(TOKEN_T::R_SQUARE_T));
+    stack1.push(new stack_item(E));
+    stack1.push(new stack_item(TOKEN_T::L_SQUARE_T));
+
+    stack2.push(new stack_item("<i>"));
+    stack2.push(new stack_item());
     stack2.push(new stack_item());
 }
