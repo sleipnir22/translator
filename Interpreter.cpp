@@ -65,7 +65,7 @@ void g::do_arithm(OPSItem& a, OPSItem&b, OPERATION_T operation, std::stack<OPSIt
         k_zero = false;
     } else if (!k_zero && b_zero) {
         if (operation == OPERATION_T::PLUS_T || operation == OPERATION_T::MUL_T) {
-            OP(b, operation);
+            LOAD(a);
             stack.top().value = 0;
             k = &stack.top();
             k_zero = false;
@@ -80,8 +80,10 @@ void g::do_arithm(OPSItem& a, OPSItem&b, OPERATION_T operation, std::stack<OPSIt
         }
     } else if (!k_zero && !a_zero && !b_zero) {
         OPSItem t(0, ITEM_TYPE::VARIABLE, TOKEN_T::NAME_T);
+        ST(t);
         LOAD(a);
         OP(b, operation);
+        stack.top().value = 0;
         *k = t;
         k = &stack.top();
     }
@@ -155,6 +157,7 @@ void g::MUL(OPSItem item) {
 
 void g::ST(OPSItem& item) {
     item.value = sum;
+    //обработка ошибки
     vars[item.word] = sum;
 }
 
