@@ -17,6 +17,7 @@ enum OPERATION_T {
     BEGIN_T,
     END_T,
     MARK_T,
+    DECLARE_ARR,
     READ_T,
     WRITE_T,
     ASSIGN_T,
