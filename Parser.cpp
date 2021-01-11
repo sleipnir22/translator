@@ -156,7 +156,7 @@ Token Parser::get_token() {
     token_word = cur_token.get_word();
     token_type = cur_token.get_type();
     if (token_type == TOKEN_T::ERROR_T) {
-        throw SyntaxError(cur_token.col, token.row, token);
+        throw IllegalCharacter(cur_token.col, token.row, token);
         //show_error("Lexeme error!");
     }
 

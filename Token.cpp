@@ -11,7 +11,7 @@ Token::Token(std::string word, TOKEN_T type) {
     this->type = type;
 }
 
-Token::Token(std::string word, TOKEN_T type, int col, int row) : word(word) , type(type) ,col(col), row(row) {}
+Token::Token(std::string word, TOKEN_T type, int col, int row) : word(word), type(type), col(col), row(row) {}
 
 void Token::get_info() const {
     std::cout << word << " ";
@@ -25,13 +25,11 @@ TOKEN_T Token::get_type() const {
     return this->type;
 }
 
-bool operator<(const Token& left, const Token& right)
-{
+bool operator<(const Token &left, const Token &right) {
     return left.get_type() < right.get_type();
 }
 
-Token& Token::operator=(const Token& other)
-{
+Token &Token::operator=(const Token &other) {
     this->type = other.type;
     this->word = other.word;
     this->row = other.row;

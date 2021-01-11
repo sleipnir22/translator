@@ -7,7 +7,7 @@
 #include "Interpreter.h"
 #include "OPS.h"
 #include <chrono>
-
+int func(int a);
 int main() {
     setlocale(LC_ALL, "Russian");
     std::ifstream f;
@@ -53,8 +53,8 @@ int main() {
     std::cout << "Execution time: " << execution_duration /1000. << " milliseconds\n";
 
 //    auto t5 = std::chrono::high_resolution_clock::now();
-//    int a = 100000000;
-//    a++;
+//
+//
 //    auto t6 = std::chrono::high_resolution_clock::now();
 //
 //    auto cpp_duration = std::chrono::duration_cast<std::chrono::microseconds>(t6 - t5).count();

@@ -4,14 +4,14 @@
 
 enum class TOKEN_T {        //27
     EMPTY_T = -2,
-    ERROR_T = -1,          
+    ERROR_T = -1,
     NAME_T = 0,             // name
     INT_T = 1,              // int
     NEWINT_T = 2,           // new int
     NEWARRAY_T = 3,         // new array
     READ_T = 4,            //"read"
     WRITE_T = 5,           //"write"
-    L_BRACE_T= 6,          //"{"
+    L_BRACE_T = 6,          //"{"
     R_BRACE_T = 7,         //"}"
     L_SQUARE_T = 8,        //"["
     R_SQUARE_T = 9,        //"]"
