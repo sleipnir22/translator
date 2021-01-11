@@ -44,10 +44,16 @@ void g::step(std::stack<OPSItem>& stack, OPSItem& item)
 
 void g::execute_command(OPSItem& a, OPSItem& b, std::stack<OPSItem>& stack, OPSItem& item) {
     auto operation = item.operation;
-    if (operation != OPERATION_T::ASSIGN_T) {
-        do_arithm(a,b,operation,stack);
-    } else if (operation == OPERATION_T::ASSIGN_T) {
-        do_assign(a,b,operation,stack);
+    switch (operation) {
+        case OPERATION_T::DIV_T:
+        case OPERATION_T::PLUS_T:
+        case OPERATION_T::MINUS_T:
+        case OPERATION_T::MUL_T:
+            do_arithm(a,b,operation,stack);
+            break;
+        case OPERATION_T::ASSIGN_T:
+            do_assign(a,b,stack);
+            break;
     }
 }
 
@@ -89,7 +95,7 @@ void g::do_arithm(OPSItem& a, OPSItem&b, OPERATION_T operation, std::stack<OPSIt
     }
 }
 
-void g::do_assign(OPSItem &a, OPSItem &b, OPERATION_T operation, std::stack<OPSItem> &stack) {
+void g::do_assign(OPSItem &a, OPSItem &b, std::stack<OPSItem> &stack) {
     if (k_zero) {
         LOAD(b);
         ST(a);
