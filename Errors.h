@@ -11,8 +11,8 @@ protected:
     Token t;
 public:
     Error(int col, int row, Token t)
-            : col(t.col), row(t.row), t(t) {}
-
+        : col(t.col), row(t.row), t(t) {}
+    Error() {};
     virtual std::string what() const = 0;
 };
 
@@ -55,3 +55,16 @@ public:
         return std::string(error) + std::string(t.get_word()) + std::string(" was already declared!") + (" (") +std::to_string(row) + (",") + std::to_string(col) + (")");
     }
 };
+
+class InitializationError : public Error {
+    std::string error;
+    OPSItem i;
+public:
+    explicit InitializationError(OPSItem i)
+        : i(i), error("Initialization error! ") {};
+
+    std::string what() const override {
+        return std::string(error) + std::string(t.get_word()) + std::string(" wasn't declared!") + (" (") +std::to_string(row) + (",") + std::to_string(col) + (")");
+    }
+};
+

@@ -117,8 +117,6 @@ Token Lexer::get_token() {
                     (this->*funcArr[k])(ch);
                 break;
         }
-
-
     }
     col = pos - start_row;
     if (pos >= text.size())

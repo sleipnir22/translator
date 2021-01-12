@@ -10,7 +10,8 @@ enum ITEM_TYPE {
     OPERATOR,
     VARIABLE,
     CONST,
-    EMPTY
+    EMPTY,
+    FINAL
 };
 
 enum OPERATION_T {
@@ -42,6 +43,7 @@ struct OPSItem {
     int value = -1;
     std::string word = "";
     int mark_pos;
+    int* var = nullptr;
     ITEM_TYPE type;
     TOKEN_T token_type;
     OPERATION_T operation = OPERATION_T::ERROR_T;
@@ -98,10 +100,20 @@ struct OPSItem {
         }
     };
     OPSItem(std::string word, OPERATION_T operation)
-            : operation(operation), type(ITEM_TYPE::EMPTY), word(word) {};
+            : operation(operation), type(ITEM_TYPE::OPERATOR), word(word) {};
     OPSItem(std::string word = "", int mark_pos = -1)
             : type(ITEM_TYPE::EMPTY), word(word), mark_pos(mark_pos),operation(OPERATION_T::MARK_T) {};
+    OPSItem& operator= (const OPSItem& other) {
+        this->value = other.value;
+        this->word = other.word;
+        this->mark_pos = other.mark_pos;
+        this->token_type = other.token_type;
+        this->operation = other.operation;
+        return *this;
+    }
 };
+
+
 
 struct OPS {
     std::vector<OPSItem> items;
