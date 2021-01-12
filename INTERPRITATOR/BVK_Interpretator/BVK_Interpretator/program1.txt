@@ -1,0 +1,30 @@
+integer i;
+integer j;
+integer t;
+integer a[100];
+integer size;
+size # 100;
+j # 0;
+while (j < size) do { read(a[j]); j#j+1;};
+
+i # 0;
+while(i < size - 1) do
+{   
+	j # 0;
+    while(j < size - 1) do
+    {     
+        if (a[j + 1] < a[j]) 
+        {
+            t # a[j + 1]; 
+            a[j + 1] # a[j]; 
+            a[j] # t;
+        };
+		j # j + 1;
+    };
+	i # i + 1;
+};
+
+  
+i # 0;
+while(i<size) do
+{  write(a[i]); i#i+1;};

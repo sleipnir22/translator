@@ -1,0 +1,18 @@
+int i,j,temp^
+intm a[5]^
+j # 0^
+while(j<5) do {read(a[j])^ j#j+1^}^
+j#1^
+while (j<5) do  
+{ i#0^
+  while (i<5-j) do 
+  { if (a[i]>a[i+1]) then 
+	  {temp # a[i]^ a[i] # a[i+1]^ a[i+1] # temp^}^
+  i#i+1^}^
+  j#j+1^
+}^
+i#0^
+ while(i<5) do
+{write(a[i])^ i#i+1^}^
+
+

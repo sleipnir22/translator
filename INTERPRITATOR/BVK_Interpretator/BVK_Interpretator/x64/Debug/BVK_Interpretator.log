@@ -1,0 +1,5 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(452,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (Alfa_Kostyuque.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  BVK_Interpretator.cpp
+C:\Users\Alex\Desktop\INTERPRITATOR\BVK_Interpretator\BVK_Interpretator\BVK_Interpretator.cpp(178,17): warning C4267:  =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Alex\Desktop\INTERPRITATOR\BVK_Interpretator\BVK_Interpretator\BVK_Interpretator.cpp(316): warning C4715:  lexical_analyzer: значение возвращается не при всех путях выполнения
+  BVK_Interpretator.vcxproj -> C:\Users\Alex\Desktop\INTERPRITATOR\BVK_Interpretator\x64\Debug\BVK_Interpretator.exe
