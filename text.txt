@@ -1,4 +1,11 @@
-c = 15;
-b = 20;
-a = c + b;
-write(c + b);
+int a;
+array arr[5];
+a = 10;
+
+while (a != 10) {
+
+    a = a + 1;
+    a = a + 1;
+}
+
+write (a);

@@ -31,7 +31,7 @@ int main() {
 
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    std::cout << "Program has been successfully compiled into OPS!. \nOPS:\n";
+    std::cout << "Program has been successfully compiled into OPS! \nOPS:\n";
     for (const auto &item : ops.items) {
         if (item.type == ITEM_TYPE::CONST) {
             std::cout << item.value << " ";
@@ -56,14 +56,13 @@ int main() {
 
     auto t5 = std::chrono::high_resolution_clock::now();
 
-    int a = 15 + 1;
-    printf("%d\n",a + 1 + 25/2);
+
 
     auto t6 = std::chrono::high_resolution_clock::now();
 
     auto cpp_duration = std::chrono::duration_cast<std::chrono::microseconds>(t6 - t5).count();
     std::cout << "Actual CPP time: " << cpp_duration /1000.<< " milliseconds\n";
-
+    //std::cin.get();
 
     return 0;
 }

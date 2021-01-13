@@ -1,3 +1,0 @@
-integer j;
-j # 4
-write(1);

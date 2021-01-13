@@ -1,4 +1,0 @@
-﻿  Alfa_Kostyuque.cpp
-C:\Users\Alex\Desktop\INTERPRITATOR\Alfa_Kostyuque\Alfa_Kostyuque\Alfa_Kostyuque.cpp(202,17): warning C4267:  =: преобразование из "size_t" в "int"; возможна потеря данных
-C:\Users\Alex\Desktop\INTERPRITATOR\Alfa_Kostyuque\Alfa_Kostyuque\Alfa_Kostyuque.cpp(429): warning C4715:  lexan: значение возвращается не при всех путях выполнения
-  Alfa_Kostyuque.vcxproj -> C:\Users\Alex\Desktop\INTERPRITATOR\Alfa_Kostyuque\x64\Debug\Alfa_Kostyuque.exe

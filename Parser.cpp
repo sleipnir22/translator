@@ -160,6 +160,7 @@ Token Parser::get_token() {
     }
 
     Token cur_token = lex.get_token();
+    std::cout << cur_token.get_word() << " ";
     token_word = cur_token.get_word();
     token_type = cur_token.get_type();
     if (token_type == TOKEN_T::ERROR_T) {
