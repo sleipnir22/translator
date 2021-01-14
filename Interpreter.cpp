@@ -88,13 +88,23 @@ void g::execute_bin_command(OPSItem lvalue, OPSItem rvalue, OPERATION_T operatio
             break;
 
         case OPERATION_T::DECLARE_ARR:
-            size = rvalue.value;
+            if (rvalue.type == CONST)
+                size = rvalue.value;
+            else if (rvalue.type == VARIABLE)
+                size = vars.at(rvalue.word);
+            else if (rvalue.type == ARRAY_EL)
+                size = arrs.at(rvalue.word)[rvalue.index];
             name = lvalue.word;
             mem_alloc(size, name);
             break;
 
         case OPERATION_T::I_T:
-            index = rvalue.value;
+            if (rvalue.type == CONST)
+                index = rvalue.value;
+            else if (rvalue.type == VARIABLE)
+                index = vars.at(rvalue.word);
+            else if (rvalue.type == ARRAY_EL)
+                index = arrs.at(rvalue.word)[rvalue.index];
             st.push(OPSItem(lvalue.word, ITEM_TYPE::ARRAY_EL, index));
             break;
 
@@ -150,6 +160,7 @@ void g::do_compare(OPSItem lvalue, OPSItem rvalue, OPERATION_T operation) {
     auto values = get_values(lvalue, rvalue);
     lval = std::get<0>(values);
     rval = std::get<1>(values);
+
     switch(operation){
         case OPERATION_T::GREATER_T:
             st.top().value = lval > rval ? 1 : 0;
@@ -175,7 +186,8 @@ void g::do_compare(OPSItem lvalue, OPSItem rvalue, OPERATION_T operation) {
 }
 
 void g::mem_alloc(int size, std::string name) {
-    arrs.insert(std::pair<std::string,std::vector<int>>(name,size));
+    arrs.insert(std::pair<std::string, std::vector<int>>(name,size));
+
     for (int i = 0; i < size; i++) {
         arrs.at(name).push_back(0);
     }
@@ -203,28 +215,6 @@ void g::do_arithm(OPSItem lvalue, OPSItem rvalue, OPERATION_T operation) {
     lval = std::get<0>(values);
     rval = std::get<1>(values);
 
-    if (lvalue.type == ITEM_TYPE::CONST && rvalue.type == CONST) {
-        lval = lvalue.value;
-        rval = rvalue.value;
-    } else if (lvalue.type == ITEM_TYPE::VARIABLE && rvalue.type == CONST) {
-        lval = vars.at(lvalue.word);
-        rval = rvalue.value;
-    } else if (lvalue.type == ITEM_TYPE::CONST && rvalue.type == VARIABLE) {
-        lval = lvalue.value;
-        rval = vars.at(rvalue.word);
-    } else if (lvalue.type == ITEM_TYPE::ARRAY_EL && rvalue.type == CONST) {
-        lval = arrs.at(lvalue.word)[lvalue.index];
-        rval = rvalue.value;
-    } else if (lvalue.type == ITEM_TYPE::ARRAY_EL && rvalue.type == VARIABLE) {
-        lval = arrs.at(lvalue.word)[lvalue.index];
-        rval = vars.at(rvalue.word);
-    } else if (lvalue.type == ITEM_TYPE::CONST && rvalue.type == ARRAY_EL) {
-        lval = lvalue.value;
-        rval = arrs.at(rvalue.word)[rvalue.index];
-    } else if (lvalue.type == ITEM_TYPE::VARIABLE && rvalue.type == ARRAY_EL) {
-        lval = vars.at(lvalue.word);
-        rval = arrs.at(rvalue.word)[rvalue.index];
-    }
     switch(operation) {
         case OPERATION_T::MUL_T:
             st.top().value = lval * rval;
@@ -238,5 +228,5 @@ void g::do_arithm(OPSItem lvalue, OPSItem rvalue, OPERATION_T operation) {
         case OPERATION_T::DIV_T:
             st.top().value = lval / rval;  //exception!
             break;
-        }
+    }
 }

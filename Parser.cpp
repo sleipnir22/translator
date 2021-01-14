@@ -370,10 +370,10 @@ void Parser::f8() {
     stack1.push(new stack_item(TOKEN_T::WHILE_T));
 
     stack2.push(new stack_item());
-    stack2.push(new stack_item("<e>"));
     stack2.push(new stack_item("<5>"));
     stack2.push(new stack_item());
-    stack2.push(new stack_item("<b>"));
+    stack2.push(new stack_item());
+    stack2.push(new stack_item());
     stack2.push(new stack_item("<1>"));
     stack2.push(new stack_item());
     stack2.push(new stack_item());
@@ -581,10 +581,10 @@ void Parser::f21() {
     stack1.push(new stack_item(TOKEN_T::L_PR_T));
     stack1.push(new stack_item(TOKEN_T::WHILE_T));
 
-    stack2.push(new stack_item("<e>"));
     stack2.push(new stack_item("<5>"));
     stack2.push(new stack_item());
-    stack2.push(new stack_item("<b>"));
+    stack2.push(new stack_item());
+    stack2.push(new stack_item());
     stack2.push(new stack_item("<1>"));
     stack2.push(new stack_item());
     stack2.push(new stack_item());

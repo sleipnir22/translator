@@ -31,7 +31,7 @@ int main() {
 
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    std::cout << "Program has been successfully compiled into OPS! \nOPS:\n";
+    std::cout << "\nProgram has been successfully compiled into OPS! \nOPS:\n";
     for (const auto &item : ops.items) {
         if (item.type == ITEM_TYPE::CONST) {
             std::cout << item.value << " ";

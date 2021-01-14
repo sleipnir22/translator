@@ -1,11 +1,16 @@
-int a;
 array arr[5];
-a = 10;
 
-while (a != 10) {
+int i,a;
+i = 0;
+a = 0;
 
-    a = a + 1;
+while (a < 5)
+{
+
+    arr[a] = 1;
+    write(arr[a]);
     a = a + 1;
 }
 
-write (a);
+
+
