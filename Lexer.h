@@ -11,16 +11,17 @@
 class Lexer {
     typedef void (Lexer::* semf)(char);
 
-    static const semf funcArr[16];
+    static const semf funcArr[19];
     static const std::string SW[];
-    static const int M[6][9];
+    static const int M[8][10];
     static const char T[];
-    static const int S[6][9];
+    static const int S[8][10];
     int j, s, k;
-    int row = 1, col = 1, start_row = 0;
+    int row = 1, col = 1, lex_col = 1;
     Token token;
     int pos = 0;
-    int num = 0;
+    int num = 0; 
+    float d = 0, x = 0;
     std::string st;
     TOKEN_T type;
     std::string text;
@@ -34,7 +35,7 @@ class Lexer {
     std::vector<std::string> varArr;
 public:
     void f1(char), f2(char), f3(char), f4(char), f5(char), f6(char), f7(char), f8(char), f9(char), f10(char), f11(
-            char), f12(char), f13(char), f14(char), f15(char), f16(char);
+            char), f12(char), f13(char), f14(char), f15(char), f16(char), f17(char), f18(char), f19(char);
 
     Lexer();
 

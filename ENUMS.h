@@ -32,5 +32,7 @@ enum class TOKEN_T {        //27
     DIV_T = 24,              //"/"
     L_PR_T = 25,             //"("
     R_PR_T = 26,             //")"
-    END_T = 27,             //";"
+    END_T = 27,              //";"
+    FLOAT_T = 28,           //double
+    NEWFLOAT_T = 29         //new double
 };
