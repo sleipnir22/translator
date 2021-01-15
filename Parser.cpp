@@ -68,6 +68,7 @@ void Parser::execute_semantic(std::vector<OPSItem>& ops_items, std::stack<stack_
         count();
     } else if (word == "<2>") {
         cur_ops.items[marks.top()].mark_pos = k + 2;
+        marks.pop();
         marks.push(k);
         cur_ops.items.emplace_back(OPSItem(std::string("m")+ std::to_string(m_size)));
         cur_ops.items.emplace_back(OPSItem("J",OPERATION_T::J_T));
@@ -75,20 +76,16 @@ void Parser::execute_semantic(std::vector<OPSItem>& ops_items, std::stack<stack_
         count();
     } else if (word == "<3>") {
         cur_ops.items[marks.top()].mark_pos = k;
+        marks.pop();
     } else if (word == "<4>") {
         marks.push(k);
     } else if (word == "<5>") {
         cur_ops.items[marks.top()].mark_pos = k + 2;
         marks.pop();
         cur_ops.items.emplace_back(OPSItem(std::string("m")+ std::to_string(m_size), marks.top()));
+        marks.pop();
         cur_ops.items.emplace_back(OPSItem("J",OPERATION_T::J_T));
         count();
-        count();
-    } else if (word == "<b>") {
-        cur_ops.items.emplace_back(OPSItem("{",OPERATION_T::BEGIN_T));
-        count();
-    } else if (word == "<e>") {
-        cur_ops.items.emplace_back(OPSItem("}",OPERATION_T::END_T));
         count();
     } else if (word == "<11>") {
         is_filling_vars = true;
@@ -347,10 +344,10 @@ void Parser::f7() {
     stack2.push(new stack_item());
     stack2.push(new stack_item());
     stack2.push(new stack_item());
-    stack2.push(new stack_item("<e>"));
     stack2.push(new stack_item());
     stack2.push(new stack_item());
-    stack2.push(new stack_item("<b>"));
+    stack2.push(new stack_item());
+    stack2.push(new stack_item());
     stack2.push(new stack_item("<1>"));
     stack2.push(new stack_item());
     stack2.push(new stack_item());
@@ -560,10 +557,10 @@ void Parser::f20() {
 
     stack2.push(new stack_item());
     stack2.push(new stack_item());
-    stack2.push(new stack_item("<e>"));
     stack2.push(new stack_item());
     stack2.push(new stack_item());
-    stack2.push(new stack_item("<b>"));
+    stack2.push(new stack_item());
+    stack2.push(new stack_item());
     stack2.push(new stack_item("<1>"));
     stack2.push(new stack_item());
     stack2.push(new stack_item());
@@ -710,10 +707,10 @@ void Parser::f31() {
     stack1.push(new stack_item(TOKEN_T::L_BRACE_T));
     stack1.push(new stack_item(TOKEN_T::ELSE_T));
 
-    stack2.push(new stack_item("<e>"));
+    stack2.push(new stack_item());
     stack2.push(new stack_item("<3>"));
     stack2.push(new stack_item());
-    stack2.push(new stack_item("<b>"));
+    stack2.push(new stack_item());
     stack2.push(new stack_item("<2>"));
 }
 
