@@ -1,16 +1,22 @@
-array arr[5];
-
-int i,a;
+int i,j,size,temp;
+array arr[10];
+arr[0] = 3; arr[1] = 2; arr[2] = 1; arr[3] = 4; arr[4] = 3; arr[5] = 6; arr[6] = 3; arr[7] = 2; arr[8] = 1; arr[9] = 4;
+i = 0; j = 0;
+size = 10;
+while (i < size - 1) {
+        j = 0;
+        while (j < size - i - 1) {
+            if (arr[j] > arr[j + 1]) {
+                temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+            j = j + 1;
+        }
+        i = i + 1;
+    }
 i = 0;
-a = 0;
-
-while (a < 5)
-{
-
-    arr[a] = 1;
-    write(arr[a]);
-    a = a + 1;
+while (i < size) {
+    write(arr[i]);
+    i = i + 1;
 }
-
-
-

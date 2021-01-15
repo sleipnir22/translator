@@ -149,6 +149,12 @@ std::tuple<int,int> g::get_values(OPSItem lvalue, OPSItem rvalue) {
     } else if (lvalue.type == ITEM_TYPE::VARIABLE && rvalue.type == ARRAY_EL) {
         lval = vars.at(lvalue.word);
         rval = arrs.at(rvalue.word)[rvalue.index];
+    } else if (lvalue.type == ITEM_TYPE::VARIABLE && rvalue.type == ITEM_TYPE::VARIABLE) {
+        lval = vars.at(lvalue.word);
+        rval = vars.at(rvalue.word);
+    } else if (lvalue.type == ITEM_TYPE::ARRAY_EL && rvalue.type == ITEM_TYPE::ARRAY_EL) {
+        lval = arrs.at(lvalue.word)[lvalue.index];
+        rval = arrs.at(rvalue.word)[rvalue.index];
     }
     return { lval, rval };
 }
@@ -194,17 +200,18 @@ void g::mem_alloc(int size, std::string name) {
 }
 
 void g::do_assign(OPSItem lvalue, OPSItem rvalue) {
-    if ((lvalue.type == ITEM_TYPE::VARIABLE) && (rvalue.type == ITEM_TYPE::VARIABLE))
+    if (lvalue.type == ITEM_TYPE::VARIABLE && rvalue.type == ITEM_TYPE::VARIABLE)
         vars.at(lvalue.word) = vars.at(rvalue.word);
-    else if((lvalue.type == ITEM_TYPE::VARIABLE) && (rvalue.type == ITEM_TYPE::CONST)) {
+    else if(lvalue.type == ITEM_TYPE::VARIABLE && rvalue.type == ITEM_TYPE::CONST) {
         vars.at(lvalue.word) = rvalue.value;
     } else if (lvalue.type == ITEM_TYPE::ARRAY_EL && rvalue.type == ITEM_TYPE::CONST) {
         arrs.at(lvalue.word)[lvalue.index] = rvalue.value;
     } else if (lvalue.type == ITEM_TYPE::ARRAY_EL && rvalue.type == ITEM_TYPE::VARIABLE) {
         arrs.at(lvalue.word)[lvalue.index] = vars.at(rvalue.word);
     } else if (lvalue.type == ITEM_TYPE::VARIABLE && rvalue.type == ITEM_TYPE::ARRAY_EL) {
-        vars.at(lvalue.word) = arrs.at(lvalue.word)[lvalue.index];
-    }
+        vars.at(lvalue.word) = arrs.at(rvalue.word)[rvalue.index];
+    } else if (lvalue.type == ITEM_TYPE::ARRAY_EL && rvalue.type == ITEM_TYPE::ARRAY_EL)
+        arrs.at(lvalue.word)[lvalue.index] = arrs.at(rvalue.word)[rvalue.index];
 }
 
 void g::do_arithm(OPSItem lvalue, OPSItem rvalue, OPERATION_T operation) {

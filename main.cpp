@@ -55,7 +55,11 @@ int main() {
     std::cout << "Execution time: " << execution_duration /1000. << " milliseconds\n";
 
     auto t5 = std::chrono::high_resolution_clock::now();
-
+    auto size = 10;
+    auto i = 0;
+    int arr[10];
+    auto j = 0;
+    auto temp = 0;
 
 
     auto t6 = std::chrono::high_resolution_clock::now();

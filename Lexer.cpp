@@ -78,7 +78,6 @@ void Lexer::make_token() {
     Token temp_token(st, type, lex_col, row);
     token = temp_token;
     token_ready = true;
-    std::cout << "lexema " << st << " type " << (int) type << " col: " << lex_col << " row: " << row << std::endl;
 }
 
 Token Lexer::get_token() {
