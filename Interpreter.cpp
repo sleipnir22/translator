@@ -16,14 +16,18 @@ void g::push_item(OPSItem& item, std::stack<OPSItem>& stack) {
 
 //стек заполняем до тех пор, пока не встретится оператор
 void g::generate_commands() {
-
-    while (pos < items.size()){
-        step(st, items[pos]);
-        if (!from_jump)
-            pos++;
-        from_jump = false;
+        while (pos < items.size()) {
+            try {
+                step(st, items[pos]);
+                if (!from_jump)
+                    pos++;
+                from_jump = false;
+            } catch (Error& e) {
+                std::cerr << "\n" << e.what();
+                break;
+            }
+        }
     }
-}
 
 void g::step(std::stack<OPSItem>& stack, OPSItem item)
 {
@@ -64,6 +68,16 @@ void Interpreter::execute_un_command(OPSItem lvalue, OPERATION_T operation) {
             }
             break;
         case OPERATION_T::READ_T:
+            if (lvalue.type == ITEM_TYPE::CONST) {
+                printf("\nINPUT: ");
+                scanf("%d", &lvalue.value);
+            } else if (lvalue.type == ITEM_TYPE::VARIABLE) {
+                printf("\nINPUT: ");
+                scanf("%d", &vars.at(lvalue.word));
+            } else if (lvalue.type == ITEM_TYPE::ARRAY_EL) {
+                printf("\nINPUT: ");
+                scanf("%d", &arrs.at(lvalue.word)[lvalue.index]);
+            }
             break;
         case OPERATION_T::J_T:
             from_jump = true;
@@ -90,10 +104,7 @@ void g::execute_bin_command(OPSItem lvalue, OPSItem rvalue, OPERATION_T operatio
         case OPERATION_T::DECLARE_ARR:
             if (rvalue.type == CONST)
                 size = rvalue.value;
-            else if (rvalue.type == VARIABLE)
-                size = vars.at(rvalue.word);
-            else if (rvalue.type == ARRAY_EL)
-                size = arrs.at(rvalue.word)[rvalue.index];
+            else throw RuntimeError("Expected const integer!");
             name = lvalue.word;
             mem_alloc(size, name);
             break;
@@ -192,11 +203,8 @@ void g::do_compare(OPSItem lvalue, OPSItem rvalue, OPERATION_T operation) {
 }
 
 void g::mem_alloc(int size, std::string name) {
-    arrs.insert(std::pair<std::string, std::vector<int>>(name,size));
-
-    for (int i = 0; i < size; i++) {
-        arrs.at(name).push_back(0);
-    }
+    //arrs.insert(std::pair<std::string, std::vector<int>>(name,size));
+    arrs.at(name).resize(size);
 }
 
 void g::do_assign(OPSItem lvalue, OPSItem rvalue) {
@@ -233,7 +241,9 @@ void g::do_arithm(OPSItem lvalue, OPSItem rvalue, OPERATION_T operation) {
             st.top().value = lval - rval;
             break;
         case OPERATION_T::DIV_T:
-            st.top().value = lval / rval;  //exception!
+            if (rval == 0)
+                throw RuntimeError("Error! Division to 0");
+            else st.top().value = lval / rval;  //exception!
             break;
     }
 }

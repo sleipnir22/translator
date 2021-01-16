@@ -23,8 +23,8 @@ const std::string Lexer::SW[]
                 "while", "if", "else", "read", "write", "int", "array","float"
         };
 
-const char Lexer::T[] =                    //Матрица символов
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 0,  //1 - буква
+const char Lexer::T[] =                                     //Матрица символов
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 0,    //1 - буква
          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,    //2 - цифра
          6, 3, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0,10, 0,    //3 - двоеточие
          2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 9, 3, 4, 3, 7,    //4 - равно
@@ -92,6 +92,7 @@ Token Lexer::get_token() {
             row++;
             col = 1;            
         }
+
         if (ch >= 0) {
             switch (T[ch]) {
                 case 0:
@@ -355,7 +356,7 @@ void Lexer::f15(char ch) {
 
 void Lexer::f16(char ch) {
     type = TOKEN_T::ERROR_T;    // ':='
-    std::cout << st << std::endl;
+    //std::cout << st << std::endl;
     lex_col = col;
     make_token();
     pos++;

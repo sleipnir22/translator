@@ -130,7 +130,7 @@ bool Parser::is_semantic(std::stack<stack_item *>& stack2) {
     auto word = stack2.top()->get_word();
     if (word == "<1>" || word == "<2>" || word == "<3>" || word == "<4>"
         || word == "<5>" || word == "<m1>" || word == "<11>" ||word == "<e_declare>"
-        || word == "<12>" || word == "<16>" || word == "<b>" || word == "<e>" ||
+        || word == "<12>" || word == "<16>" ||
         word == "<w>" || word == "<r>" || word == "<i>"
             ) {
         return true;
@@ -157,7 +157,7 @@ Token Parser::get_token() {
     }
 
     Token cur_token = lex.get_token();
-    std::cout << cur_token.get_word() << " ";
+    //std::cout << cur_token.get_word() << " ";
     token_word = cur_token.get_word();
     token_type = cur_token.get_type();
     if (token_type == TOKEN_T::ERROR_T) {
@@ -234,9 +234,15 @@ OPS Parser::make_ops() {
 
     while (!lex.is_empty() || (!stack2.empty() && !stack1.empty())) // lex is empty error!?
     {
+        STACK_ITEM_T top1_item_type;
+        STACK_ITEM_T top2_item_type;
         try {
-            STACK_ITEM_T top1_item_type = stack1.top()->get_stack_item_type(); // stack1 empty error!
-            STACK_ITEM_T top2_item_type = stack2.top()->get_stack_item_type(); // stack2 empty error!
+            if (!stack1.empty())
+                top1_item_type = stack1.top()->get_stack_item_type();
+            else throw SyntaxError(token.col, token.row, token);// stack1 empty error!
+            if (!stack2.empty())
+                top2_item_type = stack2.top()->get_stack_item_type();
+            else throw SyntaxError(token.col, token.row, token); // stack2 empty error!
             step(top1_item_type, top2_item_type);
         }
         catch (Error& e) {

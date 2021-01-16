@@ -39,10 +39,10 @@ public:
 class RuntimeError : public Error {
     std::string error;
 public:
-    RuntimeError(int col, int row, Token t) : Error(col, row, t), error("Runtime Error (") {}
-
+    RuntimeError(std::string word)
+        : error (error){};
     std::string what() const override {
-        return std::string(error) + std::to_string(row) + (",") + std::to_string(col) + (")");
+        return error;
     }
 };
 

@@ -10,7 +10,6 @@
 #include "Errors.h"
 
 class Interpreter {
-    struct two_values { int lvalue, rvalue;};
     size_t pos = 0;
     std::map<std::string, int> vars;
     std::map<std::string, std::vector<int>> arrs;

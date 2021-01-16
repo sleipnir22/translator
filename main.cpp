@@ -1,6 +1,4 @@
-﻿// translator.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
-#include "Token.h"
+﻿#include "Token.h"
 #include <iostream>
 #include "Lexer.h"
 #include "Parser.h"
@@ -9,16 +7,21 @@
 int main() {
     setlocale(LC_ALL, "Russian");
     std::ifstream f;
-    std::string path = "D:\\Clionprojects\\text.txt";
+    std::string path = "D:\\Clionprojects\\";
+
+    std::string pth;
+    std::cin >> pth;
+    path += pth;
+
     f.open(path);
     std::string text;
     std::cout << text;
     if (!f.is_open()) {
-        std::cout << "Vive la France!" << std::endl;
+        std::cout << "Cannot open the file!" << std::endl;
     } else {
         char ch;
         while (f.get(ch)) {
-            text.push_back(ch); // not optimal!
+            text.push_back(ch);
         }
     }
 
@@ -54,19 +57,8 @@ int main() {
     std::cout << "Compile time: " << compile_duration /1000. << " milliseconds\n";
     std::cout << "Execution time: " << execution_duration /1000. << " milliseconds\n";
 
-    auto t5 = std::chrono::high_resolution_clock::now();
-    auto size = 10;
-    auto i = 0;
-    int arr[10];
-    auto j = 0;
-    auto temp = 0;
 
-
-    auto t6 = std::chrono::high_resolution_clock::now();
-
-    auto cpp_duration = std::chrono::duration_cast<std::chrono::microseconds>(t6 - t5).count();
-    std::cout << "Actual CPP time: " << cpp_duration /1000.<< " milliseconds\n";
-    //std::cin.get();
-
+    std::cin.get();
+    system("pause");
     return 0;
 }
