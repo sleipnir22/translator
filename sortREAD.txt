@@ -1,5 +1,5 @@
 int i,j,size,temp;
-array arr[100];
+int1 arr[100];
 i = 0; j = 0;
 
 
