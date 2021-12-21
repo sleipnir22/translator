@@ -6,104 +6,73 @@
 #include <map>
 
 
-enum ITEM_TYPE {
-    OPERATOR,
-    VARIABLE,
-    CONST,
-    ARRAY_EL,
-    EMPTY,
-    FINAL
-};
-
-enum OPERATION_T {
-    BEGIN_T,
-    END_T,
-    MARK_T,
-    DECLARE_ARR,
-    READ_T,
-    WRITE_T,
-    ASSIGN_T,
-    PLUS_T,
-    MINUS_T,
-    DIV_T,
-    MUL_T,
-    LESS_T,
-    GREATER_T,
-    EQUAL_T,
-    LESS_OR_EQUAL_T,
-    GREATER_OR_EQUAL_T,
-    NOT_EQUAL_T,
-    J_T,
-    JF_T,
-    I_T,
-    ERROR_T
-};
-
 
 struct OPSItem {
-    int value = -1;
+    float value = -1.;
+    VAL_T val_t = FLOAT;
     std::string word = "";
     int mark_pos;
     int index = -1;
     ITEM_TYPE type;
     TOKEN_T token_type;
     OPERATION_T operation = OPERATION_T::ERROR_T;
-
-    OPSItem(int value, ITEM_TYPE type, TOKEN_T token_type)
-            : value(value), type(type), token_type(token_type) {};
+    OPSItem(float value, ITEM_TYPE type, TOKEN_T token_type)
+        : value(value), type(type), token_type(token_type) {};
+    OPSItem(float value, ITEM_TYPE type, TOKEN_T token_type, VAL_T val_t)
+        : value(value), type(type), token_type(token_type), val_t(val_t) {};
     OPSItem(std::string word, ITEM_TYPE type, TOKEN_T token_type)
-            : word(word), type(type), token_type(token_type) {
+        : word(word), type(type), token_type(token_type) {
         switch (token_type) {
-            case TOKEN_T::EQUAL_T:
-                operation = OPERATION_T::EQUAL_T;
-                this->word = "==";
-                break;
-            case TOKEN_T::ASSIGN_T:
-                operation = OPERATION_T::ASSIGN_T;
-                this->word = "=";
-                break;
-            case TOKEN_T::DIV_T:
-                operation = OPERATION_T::DIV_T;
-                this->word = "/";
-                break;
-            case TOKEN_T::MINUS_T:
-                operation = OPERATION_T::MINUS_T;
-                this->word = "-";
-                break;
-            case TOKEN_T::MUL_T:
-                operation = OPERATION_T::MUL_T;
-                this->word = "*";
-                break;
-            case TOKEN_T::PLUS_T:
-                operation = OPERATION_T::PLUS_T;
-                this->word = "+";
-                break;
-            case TOKEN_T::GOREQUAL_T:
-                operation = OPERATION_T::GREATER_OR_EQUAL_T;
-                this->word = ">=";
-                break;
-            case TOKEN_T::LOREQUAL_T:
-                operation = OPERATION_T::LESS_OR_EQUAL_T;
-                this->word = "<=";
-                break;
-            case TOKEN_T::GREATER_T:
-                this->word = ">";
-                operation = OPERATION_T::GREATER_T;
-                break;
-            case TOKEN_T::LESS_T:
-                operation = OPERATION_T::LESS_T;
-                this->word = "<";
-                break;
-            case TOKEN_T::NOTEQUAL_T:
-                operation = OPERATION_T::NOT_EQUAL_T;
-                this->word = "!=";
-                break;
+        case TOKEN_T::EQUAL_T:
+            operation = OPERATION_T::EQUAL_T;
+            this->word = "==";
+            break;
+        case TOKEN_T::ASSIGN_T:
+            operation = OPERATION_T::ASSIGN_T;
+            this->word = "=";
+            break;
+        case TOKEN_T::DIV_T:
+            operation = OPERATION_T::DIV_T;
+            this->word = "/";
+            break;
+        case TOKEN_T::MINUS_T:
+            operation = OPERATION_T::MINUS_T;
+            this->word = "-";
+            break;
+        case TOKEN_T::MUL_T:
+            operation = OPERATION_T::MUL_T;
+            this->word = "*";
+            break;
+        case TOKEN_T::PLUS_T:
+            operation = OPERATION_T::PLUS_T;
+            this->word = "+";
+            break;
+        case TOKEN_T::GOREQUAL_T:
+            operation = OPERATION_T::GREATER_OR_EQUAL_T;
+            this->word = ">=";
+            break;
+        case TOKEN_T::LOREQUAL_T:
+            operation = OPERATION_T::LESS_OR_EQUAL_T;
+            this->word = "<=";
+            break;
+        case TOKEN_T::GREATER_T:
+            this->word = ">";
+            operation = OPERATION_T::GREATER_T;
+            break;
+        case TOKEN_T::LESS_T:
+            operation = OPERATION_T::LESS_T;
+            this->word = "<";
+            break;
+        case TOKEN_T::NOTEQUAL_T:
+            operation = OPERATION_T::NOT_EQUAL_T;
+            this->word = "!=";
+            break;
         }
     };
     OPSItem(std::string word, OPERATION_T operation)
-            : operation(operation), type(ITEM_TYPE::OPERATOR), word(word) {};
+        : operation(operation), type(ITEM_TYPE::OPERATOR), word(word) {};
     OPSItem(std::string word = "", int mark_pos = -1)
-            : type(ITEM_TYPE::EMPTY), word(word), mark_pos(mark_pos),operation(OPERATION_T::MARK_T) {};
+        : type(ITEM_TYPE::EMPTY), word(word), mark_pos(mark_pos), operation(OPERATION_T::MARK_T) {};
     OPSItem(std::string word, ITEM_TYPE type, int index)
         : type(type), word(word), index(index) {};
 
@@ -116,12 +85,26 @@ struct OPSItem {
         this->operation = other.operation;
         return *this;
     }
+
+
+    void set_value(float _value)
+    {
+        if (val_t == INT)
+            value = (int)_value;
+        else
+            value = _value;
+    }
+    float get_value()
+    {
+        return value;
+    }
 };
 
 
 
 struct OPS {
     std::vector<OPSItem> items;
-    std::map<std::string, int> vars;
-    std::map<std::string, std::vector<int>> arr;
+    std::map<std::string, float> vars;
+    std::map<std::string, std::vector<float>> arr;
+    std::map<std::string, VAL_T> valts;
 };

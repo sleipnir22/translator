@@ -1,0 +1,4 @@
+float a,b;
+a = 3;
+b = 2.5;
+write(a-b);
